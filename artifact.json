@@ -1,0 +1,11 @@
+{
+  "db": { "rules": [{ "path": "", "read": "admin", "write": "admin" }] },
+  "user": {},
+  "sample": { "images": true },
+  "mcp": {
+    "servers": [
+      { "server": "Gmail", "tools": ["search_threads", "get_thread"] },
+      { "server": "Google Calendar", "tools": ["list_events", "create_event", "delete_event"] }
+    ]
+  }
+}
