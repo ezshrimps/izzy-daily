@@ -69,12 +69,11 @@ Supported action types:
 
 ## Everything else
 
-The hub feeds a dashboard with seven pages:
+The hub feeds a dashboard with six pages:
 
 | Page | What's there |
 |---|---|
-| **Today** | Now card with progress bar, timeline (Google Calendar + weekly template), to-dos ranked by urgency, daily check-ins |
-| **Week** | Habit grid, sleep, weekly review drafted by Claude |
+| **Today** | Now card with progress bar, an editable day grid (Google Calendar + weekly template), to-dos ranked by urgency, daily check-ins |
 | **Jobs** | Application pipeline synced with my job-hunting agent's board, response-odds score |
 | **Applications** | Grad school tracker and a copy-paste kit for job forms |
 | **Finance** | Spending, income and budgets (see below) |
@@ -83,7 +82,13 @@ The hub feeds a dashboard with seven pages:
 
 ![Finance page](docs/finance.png)
 
+### Editing the day like Google Calendar
+
+The timeline is a day grid. Click empty space (or drag) to create a block, click a block to rename it or change its time, drag it to move, drag its bottom edge to resize. Blocks snap to 15 minutes, overlapping blocks sit side by side, and every change can be undone. Template blocks save into that day only; events from Google Calendar can be opened or deleted.
+
 ### Finance logic
+
+- **Ten categories, three natures.** Housing, food, transport, home & utilities, health, personal & gifts, leisure, learning, banking fees and other. Each category is tagged rigid (hard to cut), flexible (where the money leaks) or future (pays off later), and the finance page shows the monthly split.
 
 - **Bank alerts in, no bank login.** Transactions come from Bank of America alert emails read through the Gmail connector. They are parsed with regex first and with Claude as a fallback. Gmail message IDs are used as document keys, so re-syncing never duplicates a transaction.
 - **Fixed costs count only when actually paid.** Rent and insurance are matched against real payments, not assumed every month.
