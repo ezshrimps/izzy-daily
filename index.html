@@ -1225,7 +1225,8 @@ end</pre>
     for (const sl of (a.set || [])) {
       const st = hm2(sl && sl.start); if (!st || !sl.text) continue;
       const s = toMin(st); let e = hm2(sl.end) ? toMin(hm2(sl.end)) : s + 60; if (e <= s) e += 1440;
-      items = items.flatMap(i => i.e <= s || i.s >= e ? [i] : [...(i.s < s ? [{ ...i, e: s }] : []), ...(i.e > e ? [{ ...i, s: e }] : [])]);
+      // Overlaps are kept (shown side by side). To replace something, the hub names it in remove.
+      if (items.some(i => i.s === s && i.e === e && i.w === String(sl.text).slice(0, 40))) continue;
       items.push({ s, e, w: String(sl.text).slice(0, 40), kind: KINDS.some(x => x.k === sl.kind) ? sl.kind : '' });
     }
     return items.filter(i => i.e - i.s >= 5).sort((x, y) => x.s - y.s).map(schedLine).join('\n');
@@ -1239,9 +1240,8 @@ end</pre>
   function daySchedule(date) {
     const tpl = parseSched(schedText(date)).map((x, ti) => ({ ...x, ti }));
     const cal = [...(S.cal[date] || []).filter(e => !e.allDay), ...eventsOn(date)];
-    if (!cal.length) return tpl;
-    const keep = tpl.filter(t => !cal.some(c => c.s < t.e && c.e > t.s));
-    return [...keep, ...cal].sort((a, b) => a.s - b.s);
+    // Like Google Calendar: overlapping items all stay; the timeline puts them side by side.
+    return [...tpl, ...cal].sort((a, b) => a.s - b.s || b.e - a.e);
   }
 
   // ---------- timeline: a day grid edited like Google Calendar ----------
@@ -1520,7 +1520,7 @@ end</pre>
   function renderToday() {
     const t = todayStr(); const isT = S.sel === t; const day = getDay(S.sel); const items = daySchedule(S.sel); const nm = nowMin();
     let cur = null, nexts = [];
-    if (isT) { cur = items.find(i => nm >= i.s && nm < i.e) || null; nexts = items.filter(i => i !== cur && i.s >= (cur ? cur.s : nm)).slice(0, 2); }
+    if (isT) { { const on = items.filter(i => nm >= i.s && nm < i.e); cur = on.find(i => i.src === 'cal' || i.src === 'evt') || on.sort((a, b) => b.s - a.s)[0] || null; } nexts = items.filter(i => i !== cur && i.s >= (cur ? cur.s : nm)).slice(0, 2); }
     else nexts = items.slice(0, 3);
     let nowHtml;
     if (cur) {
@@ -2073,7 +2073,7 @@ ${list.map(({ t, lv }) => `${t.id} | ${t.text} | ${LV[lv]} | ${t.due || '无'} |
 - {"type":"recurring","name":"名称","amount":数字,"cat":"${CAT_KEYS}"} 每月固定支出（房租→housing、车险→transport、话费→utilities）
 - {"type":"txn","id":"待分类交易 id","cat":"${CAT_KEYS}|ignore"} 给 BofA 交易归类
 - {"type":"settings","budget":数字,"protein":克,"kcal":千卡,"goals":{"reading":0-7,"plan":0-7,"gym":0-7}} 只写要改的字段
-- {"type":"schedule","date":"YYYY-MM-DD","set":[{"start":"HH:MM","end":"HH:MM","text":"事项（简短）","kind":"${KIND_KEYS}"}],"remove":["要从那天安排里去掉的事项名（可选）"]} 改某天的时间线：自己的安排（"上午写简历两小时，下午去健身，晚上打 maimai"、"明天 10 点开会"、"晚上不打 maimai 了"）都用这条，可以一次给多个时段。set 只列新加或替换的时段，原安排里和它重叠的部分会自动让出。只说了时长没说具体时间时，按顺序从那个时段的第一个空档排起：上午从起床/早餐结束后开始，下午从午餐/午休结束后开始，晚上从晚餐结束后开始，不要压到起床、三餐和午休上；连说几件事就首尾相接排下去；没说时长按常理估。kind 是颜色分类：rest=休息、work=工作/学习、meet=开会/重要活动、sport=运动、transit=开车路上/损耗时间、gig=拍摄打工或其他活动、game=游戏或 maimai。有别人参与、需要写进日历的活动（会议、面试、聚会、预约）才用 event
+- {"type":"schedule","date":"YYYY-MM-DD","set":[{"start":"HH:MM","end":"HH:MM","text":"事项（简短）","kind":"${KIND_KEYS}"}],"remove":["要从那天安排里去掉的事项名（可选）"]} 改某天的时间线：自己的安排（"上午写简历两小时，下午去健身，晚上打 maimai"、"明天 10 点开会"、"晚上不打 maimai 了"）都用这条，可以一次给多个时段。set 只列新加或替换的时段，和原安排时间重叠时两者都保留、并排显示；如果用户是要替换原来的事项（「改成」「不去 X 了，换成 Y」），把原事项名字放进 remove。只说了时长没说具体时间时，按顺序从那个时段的第一个空档排起：上午从起床/早餐结束后开始，下午从午餐/午休结束后开始，晚上从晚餐结束后开始，不要压到起床、三餐和午休上；连说几件事就首尾相接排下去；没说时长按常理估。kind 是颜色分类：rest=休息、work=工作/学习、meet=开会/重要活动、sport=运动、transit=开车路上/损耗时间、gig=拍摄打工或其他活动、game=游戏或 maimai。有别人参与、需要写进日历的活动（会议、面试、聚会、预约）才用 event
 - {"type":"sleep_now","which":"bed|wake"} 现在要睡了 / 刚起来坐到桌前
 - {"type":"check","item":"reading|plan|pickleball|shake|creatine"} shake = 喝了蛋白粉（会自动记一勺进饮食，不要再另记 food），creatine = 吃了肌酸 今天读过书 / 已经做好明天的计划 / 打了 Pickleball
 - {"type":"gym","parts":["shoulder","chest","back","core"] 的子集} 练了哪些部位（二头算背，三头算胸）
