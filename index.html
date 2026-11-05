@@ -161,6 +161,33 @@ textarea.field { width: 100%; resize: vertical; min-height: 64px; line-height: 1
 .tl-i.cur { background: var(--pink); }
 .tl-note { font-size: 12px; color: var(--muted); margin-top: 8px; }
 
+/* day grid (edited like Google Calendar) */
+.tlg { position: relative; overflow-y: auto; overscroll-behavior: contain; user-select: none; -webkit-user-select: none; }
+.tlg-in { position: relative; margin-left: 46px; margin-right: 2px; touch-action: pan-y; }
+.tlh { position: absolute; left: 0; right: 0; height: 0; border-top: 1px solid var(--line); }
+.tlh span { position: absolute; left: -46px; top: -8px; width: 40px; text-align: right; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.tlb { position: absolute; box-sizing: border-box; border-radius: 8px; padding: 3px 8px; overflow: hidden; cursor: pointer; font-size: 12.5px; line-height: 1.3;
+  background: color-mix(in srgb, var(--cat) 20%, var(--surface)); border-left: 3px solid var(--cat); color: var(--ink); display: flex; flex-direction: column; }
+.tlb b { font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .tlb span { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tlb.short { flex-direction: row; gap: 6px; align-items: center; padding-block: 0; } .tlb.short b { flex: 0 1 auto; min-width: 0; }
+.tlb.past { opacity: .5; } .tlb.cur { background: color-mix(in srgb, var(--cat) 34%, var(--surface)); }
+.tlb.sel, .tlb.drag { box-shadow: 0 6px 18px rgba(0,0,0,.18); z-index: 3; opacity: 1; } .tlb.drag { cursor: grabbing; }
+.tlb .rh { position: absolute; left: 0; right: 0; bottom: 0; height: 8px; cursor: ns-resize; }
+.tlb .rh::after { content: ""; position: absolute; left: 50%; bottom: 2px; width: 18px; height: 3px; margin-left: -9px; border-radius: 2px; background: var(--cat); opacity: 0; }
+.tlb:hover .rh::after, .tlb.sel .rh::after { opacity: .8; }
+.k-rest { --cat: #3FB37F; } .k-work { --cat: #4A7BE0; } .k-meet { --cat: #E0475B; } .k-sport { --cat: #E8B21C; } .k-transit { --cat: #9AA0AC; } .k-gig { --cat: #9B6BE0; } .k-game { --cat: #F08A24; }
+.tl-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 10px; font-size: 11.5px; color: var(--muted); font-weight: 700; } .tl-legend span { display: inline-flex; align-items: center; gap: 5px; } .tl-legend i { width: 9px; height: 9px; border-radius: 3px; background: var(--cat); }
+.tlp-kinds { display: flex; flex-wrap: wrap; gap: 6px; } .tlp-kinds label { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; color: var(--muted); padding: 3px 8px 3px 4px; border-radius: 99px; border: 1.5px solid var(--line); cursor: pointer; }
+.tlp-kinds input { position: absolute; opacity: 0; width: 1px; height: 1px; } .tlp-kinds i { width: 14px; height: 14px; border-radius: 50%; background: var(--cat); } .tlp-kinds label:has(input:checked) { border-color: var(--cat); color: var(--ink); background: color-mix(in srgb, var(--cat) 14%, var(--surface)); } .tlp-kinds label:has(input:focus-visible) { outline: 2px solid var(--c-work); }
+.tlghost { --cat: var(--c-work); border: 1.5px dashed var(--c-work); border-left-width: 3px; z-index: 4; pointer-events: none; }
+.tlnow { position: absolute; left: -6px; right: 0; height: 2px; background: var(--bad); z-index: 5; pointer-events: none; } .tlnow::before { content: ""; position: absolute; left: -4px; top: -4px; width: 10px; height: 10px; border-radius: 50%; background: var(--bad); }
+.tl-acts { display: flex; align-items: center; gap: 10px; }
+.tlpop { position: fixed; z-index: 40; width: 300px; background: var(--surface); border: 1.5px solid var(--line); border-radius: 16px; padding: 14px; box-shadow: 0 16px 40px rgba(0,0,0,.18); display: grid; gap: 10px; }
+.tlpop form { display: grid; gap: 10px; } .tlpop .tlp-t { font-size: 17px; font-weight: 700; border-width: 0 0 2px; border-radius: 0; padding: 4px 2px; }
+.tlpop .tlp-time { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); } .tlpop .tlp-time .field { padding: 5px 8px; flex: 1; }
+.tlpop .tlp-h { font-size: 16px; font-weight: 800; } .tlpop .tlp-s { font-size: 13px; color: var(--muted); }
+@media (max-width: 1099px) { .tlg { max-height: 540px; } }
+@media (max-width: 879px) { .tlpop { left: 8px !important; right: 8px; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); top: auto !important; width: auto; } }
 /* todo */
 .todo { display: grid; gap: 6px; }
 .sub-h { font-size: 12px; font-weight: 800; color: var(--muted); letter-spacing: .04em; margin: 12px 0 6px; display: flex; justify-content: space-between; }
@@ -540,6 +567,8 @@ textarea.field { width: 100%; resize: vertical; min-height: 64px; line-height: 1
 .chart.fin-chart { width: 100%; max-width: none; height: auto; display: block; } .fin-chart text { font-size: 11px; pointer-events: none; } .fin-chart line { pointer-events: none; }
 .fin-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 8px; font-size: 12px; font-weight: 700; color: var(--muted); }
 .fin-legend span { display: inline-flex; align-items: center; gap: 5px; } .fin-legend i { width: 9px; height: 9px; border-radius: 3px; display: inline-block; }
+.fnat-bar { display: flex; height: 14px; border-radius: 99px; overflow: hidden; background: var(--sunk); margin-bottom: 10px; } .fnat-bar i { display: block; height: 100%; }
+.fnat-r { display: grid; grid-template-columns: 12px 64px auto minmax(0, 1fr); gap: 8px; align-items: baseline; padding: 5px 0; font-size: 13px; } .fnat-r i { width: 10px; height: 10px; border-radius: 3px; align-self: center; } .fnat-r b { font-variant-numeric: tabular-nums; } .fnat-r small { color: var(--muted); font-size: 11.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .fbud { display: grid; gap: 4px; padding: 7px 0; border-top: 1px solid var(--line); } .fbud:first-child { border-top: 0; padding-top: 0; }
 .fbud-h { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 14px; } .fbud-h .nm { font-weight: 800; } .fbud-h .num { color: var(--muted); font-weight: 700; font-size: 13px; }
 .fbud .bar { position: relative; overflow: visible; } .fbud .bar > i { max-width: 100%; } .fbud .bar em { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--ink); opacity: .35; border-radius: 2px; }
@@ -654,6 +683,31 @@ pre.fmt { margin: 0; background: var(--sunk); border-radius: 14px; padding: 12px
 .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(84px + env(safe-area-inset-bottom, 0px)); background: var(--btn); color: var(--btn-fg); padding: 10px 18px; border-radius: 99px; font-size: 13px; font-weight: 700; z-index: 30; max-width: calc(100% - 32px); }
 @media (min-width: 880px) { .toast { bottom: 28px; } }
 @media (prefers-reduced-motion: no-preference) { .ck, .chip, .mat, .rec, .tab { transition: background-color .15s, color .15s, border-color .15s; } }
+
+/* ===== Today layout: one entry bar on top; below it three columns by question —
+   when (now + timeline) · what to do (to-dos) · how am I doing (numbers + check-ins). ===== */
+.today .t-entry .qe-in.ta { flex-direction: row; align-items: center; border-radius: 99px; padding-right: 4px; }
+.today .t-entry .qe-in.ta textarea { flex: 1 1 auto; width: auto; min-width: 0; min-height: 0; height: 46px; padding: 12px 18px; font-size: 15.5px; white-space: nowrap; overflow: hidden; }
+.today .t-entry .qe-in.ta textarea:focus { white-space: normal; }
+.today .t-entry .ta-f { padding: 0 2px; flex: none; margin-left: auto; } .today .t-entry .ta-f .hint { display: none; }
+.today .card.t-entry { padding: 10px 12px; }
+.t-side .dstats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 0; }
+.t-side .dstats .tile { min-width: 0; flex-direction: column; align-items: flex-start; gap: 2px; border-radius: 14px; padding: 8px 12px; }
+.t-side .dstats .tile .k { white-space: nowrap; } .t-side .dstats .tile .v { font-size: 17px; max-width: 100%; }
+.t-side .t-stats { padding: 14px 16px; } .t-side .t-stats .card-h { margin-bottom: 8px; }
+@media (min-width: 1100px) {
+  .today.on { grid-template-columns: minmax(300px, .95fr) minmax(0, 1.3fr) minmax(280px, .8fr); grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas: "entry entry entry" "sched todo side"; align-items: stretch; }
+  .today .t-entry { grid-area: entry; padding: 12px 14px; } .today .t-sched { grid-area: sched; } .today .t-todo { grid-area: todo; } .today .t-side { grid-area: side; }
+  .today .t-entry .qe { gap: 6px; }
+  .t-side .dchecks { grid-template-columns: minmax(0, 1fr); }
+}
+@media (min-width: 1100px) and (min-height: 640px) {
+  .today.on { grid-template-rows: auto minmax(0, 1fr); }
+}
+@media (max-width: 879px) {
+  .today .t-sched { order: 1; } .today .t-todo { order: 2; } .today .t-side { order: 3; }
+}
 </style>
 
 <div class="app">
@@ -675,36 +729,30 @@ pre.fmt { margin: 0; background: var(--sunk); border-radius: 14px; padding: 12px
   <!-- 今日 -->
   <section class="panel today" id="p-today" role="tabpanel">
     <div class="qstat phone-only" id="qsum"></div>
-    <!-- 左：今日时间线（整列） -->
+    <!-- 顶部：一句话入口。整个面板从这里输入，结果落到下面三列 -->
+    <div class="card qcard t-entry"><div class="qe" data-qe="desk"></div></div>
+    <!-- 左：现在 + 时间线（今天的时间怎么过） -->
     <div class="col t-sched">
       <div class="card edge now" id="nowCard"></div>
       <div class="card grow">
-        <div class="card-h"><h2>今日时间线</h2><button class="link" id="editSched">调整今天</button></div>
-        <div class="tl scroll" id="timeline"></div>
-        <div id="schedEdit" hidden>
-          <textarea class="field" id="schedText" rows="10" style="font-size:13px"></textarea>
-          <div class="row" style="margin-top:8px"><button class="pill sm" id="schedSave">保存这一天</button><button class="pill sm out" id="schedReset">恢复模板</button><button class="pill sm out" id="schedCancel">取消</button></div>
-          <div class="saved" style="margin-top:6px">每行一项：19:00-21:00 Luma 活动。只改这一天。</div>
-        </div>
+        <div class="card-h"><h2>今日时间线</h2><button class="link" id="schedReset" hidden style="white-space:nowrap">恢复模板</button></div>
+        <div class="tlg scroll" id="timeline"></div>
+        <div class="tl-legend" id="tlLegend"></div>
         <div class="tl-note" id="calNote"></div>
       </div>
     </div>
-    <!-- 中：现在 + 记一笔 + 打卡 -->
-    <div class="col t-mid">
-      <div class="card qcard t-entry">
-        <div class="qe" data-qe="desk"></div>
-        <div class="dstats" id="tiles"></div>
-        <div class="weekline" id="weekline" hidden></div>
-      </div>
+    <!-- 中：待办与提醒（今天要做的事） -->
+    <div class="card grow t-todo">
+      <div class="card-h"><h2>待办与提醒</h2><span class="hint" id="attCount"></span></div>
+      <div class="att scroll" id="attention"></div>
+    </div>
+    <!-- 右：今天的数字和打卡（身体与习惯） -->
+    <div class="col t-side">
+      <div class="card t-stats"><div class="card-h"><h2>今天</h2></div><div class="dstats" id="tiles"></div><div class="weekline" id="weekline" hidden></div></div>
       <div class="card t-do">
         <div class="card-h"><h2>每日打卡</h2><span class="hint" id="todoCount"></span></div>
         <div class="dchecks" id="checks"></div>
       </div>
-    </div>
-    <!-- 右：待办（最宽的一列） -->
-    <div class="card grow t-todo">
-      <div class="card-h"><h2>待办与提醒</h2><span class="hint" id="attCount"></span></div>
-      <div class="att scroll" id="attention"></div>
     </div>
   </section>
 
@@ -736,23 +784,6 @@ pre.fmt { margin: 0; background: var(--sunk); border-radius: 14px; padding: 12px
   </section>
 
   <!-- 本周 -->
-  <section class="panel" id="p-week" role="tabpanel">
-    <div class="ptitle"><h1 id="wkTitle">本周</h1><p>按周看，不按天苛求。点格子可以补打卡。</p></div>
-    <div class="card"><div class="tbl-wrap"><table class="wkt" id="wkTable"></table></div></div>
-    <div class="cols">
-      <div class="card"><div class="card-h"><h2>本周产出</h2></div><div class="kpis" id="wkKpis"></div></div>
-      <div class="card"><div class="card-h"><h2>身体</h2></div><div class="kpis" id="wkBody"></div></div>
-    </div>
-    <div class="card">
-      <div class="card-h"><h2>每周复盘</h2><span class="saved" id="revSaved"></span></div>
-      <div class="formgrid">
-        <label>这周做得好的<textarea class="field" id="revGood" rows="3"></textarea></label>
-        <label>需要调整的<textarea class="field" id="revAdjust" rows="3"></textarea></label>
-        <label>下周重点（含已知的 Luma 活动、会议、聚会）<textarea class="field" id="revNext" rows="3"></textarea></label>
-        <div class="row"><button class="pill" id="revSave">保存复盘</button><button class="pill out" id="revDraft" type="button">让 Claude 起草</button></div>
-      </div>
-    </div>
-  </section>
 
   <!-- 研究生申请 -->
   <section class="panel" id="p-grad" role="tabpanel">
@@ -784,6 +815,7 @@ pre.fmt { margin: 0; background: var(--sunk); border-radius: 14px; padding: 12px
     <div class="fin-grid">
       <div class="stack">
         <div class="card"><div class="card-h"><h2>月度趋势</h2><span class="fin-mnav sm"><button class="circ" data-finmo="-1" aria-label="上个月">‹</button><b id="finTrendMo"></b><button class="circ" data-finmo="1" aria-label="下个月">›</button></span></div><div id="finTrend"></div><div class="fin-legend" id="finLegend"></div></div>
+        <div class="card"><div class="card-h"><h2>支出性质</h2><span class="hint">刚性 · 弹性 · 未来</span></div><div id="finNature"></div></div>
         <div class="card"><div class="card-h"><h2>分类预算</h2><span class="hint">点数字直接改</span></div><div id="finBudgets"></div></div>
         <div class="card" id="finPendCard"><div class="card-h"><h2>待分类的交易</h2><span class="row" style="gap:8px"><span class="hint" id="finPendHint"></span><button class="pill sm grad" id="finAICat">✨ 让 Claude 分类</button></span></div><div id="finPend"></div></div>
         <div class="card"><div class="card-h"><h2>交易</h2><span class="hint" id="finTxHint"></span></div>
@@ -947,6 +979,7 @@ end</pre>
   </form>
 </div>
 <div class="toast" id="toast" hidden></div>
+<div class="tlpop" id="tlPop" hidden role="dialog" aria-label="编辑日程"></div>
 
 <script>
 (() => {
@@ -1006,26 +1039,49 @@ end</pre>
     { k: 'sport', re: /健身|Pickleball|运动/i }, { k: 'learn', re: /日语|阅读|学习/ }, { k: 'fun', re: /maimai|聚会|自由|LoL|娱乐/i }, { k: 'life', re: /./ },
   ];
   const catOf = w => (CATS.find(c => c.re.test(w)) || CATS[6]).k;
-  const EXP_CATS = [{ k: 'food', n: '餐饮' }, { k: 'transport', n: '交通' }, { k: 'fun', n: '娱乐' }, { k: 'sport', n: '运动' }, { k: 'shop', n: '购物' }, { k: 'fixed', n: '固定支出' }, { k: 'other', n: '其他' }];
+  // Timeline colors by kind of time. A line can pin its kind with a trailing "#kind"; otherwise the title decides.
+  const KINDS = [
+    { k: 'rest', n: '休息', re: /起床|早餐|午餐|午休|晚餐|吃饭|休息|洗漱|洗澡|睡|午觉|放空/ },
+    { k: 'game', n: '游戏 / maimai', re: /maimai|舞萌|机厅|音游|游戏|LoL|LPL|英雄联盟|Switch|steam/i },
+    { k: 'meet', n: '开会 / 重要活动', re: /会议|开会|面试(?!准备)|meeting|sync|1:1|宣讲|讲座|活动|Luma|meetup|聚会|派对|约见|见面|重要|DDL|截止|考试/i },
+    { k: 'sport', n: '运动', re: /健身|运动|pickleball|匹克球|跑步|游泳|球|瑜伽|gym|爬山|徒步/i },
+    { k: 'transit', n: '路上 / 损耗', re: /开车|路上|通勤|出发|回家|去往|堵车|排队|DMV|办事|接人|送人|机场|航班/i },
+    { k: 'gig', n: '拍摄 / 打工 / 其他活动', re: /拍摄|摄影|打工|兼职|跑腿|代拍|直播|演出/ },
+    { k: 'work', n: '工作 / 学习', re: /SVTR|工作|学习|求职|申请|刷题|编程|coding|写|读|阅读|日语|复盘|计划|研究|简历|面试准备|项目|课/i },
+  ];
+  const KIND_KEYS = KINDS.map(x => x.k).join('|');
+  const kindOf = i => (i.kind && KINDS.some(x => x.k === i.kind)) ? i.kind : (KINDS.find(x => x.re.test(i.w || '')) || { k: i.src === 'cal' || i.src === 'evt' ? 'meet' : 'gig' }).k;
+  const schedLine = x => `${fmtMin(x.s)}-${fmtMin(x.e)} ${x.w}${x.kind ? ' #' + x.kind : ''}`;
+  // Spending categories, each with a nature: 刚性 (hard to cut), 弹性 (where the money leaks), 未来 (pays off later).
+  const EXP_CATS = [
+    { k: 'housing', n: '住房', nat: 'rigid', d: '房租、物业、房屋维修' },
+    { k: 'food', n: '饮食', nat: 'flex', d: '买菜、外卖、餐厅聚餐、咖啡奶茶、零食' },
+    { k: 'transport', n: '交通', nat: 'rigid', d: '油费、停车、打车、公交、车险、保养、DMV' },
+    { k: 'utilities', n: '居家日用', nat: 'rigid', d: '水电燃气、网费、话费、云存储、日用品' },
+    { k: 'health', n: '医疗保险', nat: 'rigid', d: '看病、买药、体检、医疗保险' },
+    { k: 'personal', n: '个人与人情', nat: 'flex', d: '衣服鞋包、数码、理发护肤、健身运动、送礼请客' },
+    { k: 'fun', n: '休闲娱乐', nat: 'flex', d: '电影演出、旅游、游戏、影音会员' },
+    { k: 'growth', n: '学习成长', nat: 'future', d: '书、课程、考试和申请费、AI 与开发工具订阅' },
+    { k: 'finance', n: '金融费用', nat: 'rigid', d: '银行月费、手续费、利息' },
+    { k: 'other', n: '其他', nat: 'flex', d: '临时或无法归类的杂支' },
+  ];
+  const NATURES = [{ k: 'rigid', n: '刚性', d: '必需、难压缩' }, { k: 'flex', n: '弹性', d: '可调控，月光多半在这里' }, { k: 'future', n: '未来', d: '学习、成长，长期有回报' }];
+  const CAT_KEYS = EXP_CATS.map(c => c.k).join('|');
+  const CAT_GUIDE = EXP_CATS.map(c => `${c.k}=${c.n}（${c.d}）`).join('；');
+  // Older writers (the morning brief, old rows) still use food|transport|fun|sport|shop|fixed|other; map them on read.
+  const CAT_LEGACY = { sport: 'personal', shop: 'personal', fixed: 'housing' };
+  const normCat = e => { if (e && e.cat in CAT_LEGACY) { if (e.cat === 'fixed') e.fixed = true; e.cat = CAT_LEGACY[e.cat]; } return e; };
+  const natOf = k => (EXP_CATS.find(c => c.k === k) || {}).nat || '';
   const expName = k => (EXP_CATS.find(c => c.k === k) || { n: '待分类' }).n;
   const MATS = [{ k: 'sop', n: '文书' }, { k: 'rec', n: '推荐信' }, { k: 'transcript', n: '成绩单' }, { k: 'test', n: '语言/考试' }, { k: 'cv', n: '简历' }, { k: 'fee', n: '申请费' }, { k: 'submitted', n: '已提交' }];
   const REC_ST = ['未联系', '已同意', '已提交'];
-  const WB = (a, ev, late) => ['08:00-09:00 起床、早餐、洗漱', '09:00-12:00 SVTR 深度工作', '12:00-13:00 午餐、休息', '13:00-14:30 求职', `14:30-16:00 ${a}`, ...ev, ...late].join('\n');
-  const LATE = ['22:30-23:00 洗澡、杂事', '23:00-23:30 日语学习', '23:30-00:00 阅读'];
   const DEFAULTS = {
     goals: { reading: 7, plan: 7, gym: 4, shake: 7, creatine: 7 }, shake: { p: 24, k: 120 },
     food: { protein: 0, kcal: 0 }, budget: 0, weightUnit: 'kg', quickFoods: [],
     workoutMap: [{ re: 'pickleball', k: 'pickleball' }, { re: '匹克球', k: 'pickleball' }, { re: 'strength', k: 'gym' }, { re: '力量', k: 'gym' }, { re: 'functional', k: 'gym' }, { re: '功能性', k: 'gym' }, { re: 'hiit', k: 'gym' }, { re: '高强度间歇', k: 'gym' }, { re: 'core', k: 'gym' }, { re: '核心', k: 'gym' }],
-    titles: ['SVTR + 求职 · 健身 · 固定会议', 'SVTR + 求职 · 健身 · Pickleball', 'SVTR + 研究生申请 · maimai', 'SVTR + 求职 · 健身 · Pickleball', 'SVTR + 求职 · 健身 · 固定会议', '自由安排 · maimai / 朋友聚会', '研究生申请 + 每周复盘 · Pickleball'],
-    templates: [
-      WB('SVTR / 研究生申请', ['16:00-18:00 健身', '18:00-19:00 晚餐、休息', '19:00-21:00 固定会议', '21:00-22:30 自由时间'], LATE),
-      WB('SVTR / 研究生申请', ['16:00-18:00 健身（降低强度）', '18:00-19:00 晚餐、休息', '19:00-22:30 Pickleball'], LATE),
-      WB('研究生申请', ['16:00-18:00 弹性工作', '18:00-19:00 晚餐、休息', '19:00-23:00 maimai'], ['23:00-00:00 日语 / 阅读']),
-      WB('SVTR / 研究生申请', ['16:00-18:00 健身（降低强度）', '18:00-19:00 晚餐、休息', '19:00-22:30 Pickleball'], LATE),
-      WB('SVTR / 研究生申请', ['16:00-18:00 健身', '18:00-19:00 晚餐、休息', '19:00-21:00 固定会议', '21:00-22:30 自由时间'], LATE),
-      ['09:00-10:00 起床、早餐', '10:00-12:00 补充任务 / 自由安排', '12:00-13:00 午餐', '13:00-18:00 自由安排 / 可选健身', '18:00-19:00 晚餐', '19:00-23:00 maimai / 朋友聚会'].join('\n'),
-      ['09:00-10:00 起床、早餐', '10:00-12:00 研究生申请', '12:00-13:00 午餐', '13:00-16:00 自由安排', '16:00-16:30 每周复盘', '16:30-18:00 自由安排', '18:00-19:00 晚餐', '19:00-22:30 Pickleball', '22:30-23:00 洗澡、杂事', '23:00-00:00 日语 / 阅读'].join('\n'),
-    ],
+    titles: ['待安排', '待安排', '待安排', '待安排', '待安排', '周末', '周末'],
+    // Only the fixed anchors of the day; everything else gets filled in from the entry box.
+    templates: [0, 1, 2, 3, 4, 5, 6].map(i => (i < 5 ? ['08:00-09:00 起床、早餐 #rest'] : ['09:00-10:00 起床、早餐 #rest']).concat(['12:00-13:00 午餐、午休 #rest', '18:00-19:00 晚餐 #rest']).join('\n')),
   };
 
   // Chinese name → [English search words, default grams, preferred dataset row]
@@ -1121,8 +1177,8 @@ end</pre>
   }
 
   // ---------- tabs ----------
-  const DESK_TABS = [{ k: 'today', n: '今日' }, { k: 'week', n: '本周' }, { k: 'jobs', n: '求职' }, { k: 'grad', n: '申请' }, { k: 'money', n: '理财' }, { k: 'food', n: '健康' }, { k: 'settings', n: '设置' }];
-  const MOB_TABS = [{ k: 'quick', n: '记一笔' }, { k: 'today', n: '今日' }, { k: 'week', n: '本周' }, { k: 'more', n: '更多' }];
+  const DESK_TABS = [{ k: 'today', n: '今日' }, { k: 'jobs', n: '求职' }, { k: 'grad', n: '申请' }, { k: 'money', n: '理财' }, { k: 'food', n: '健康' }, { k: 'settings', n: '设置' }];
+  const MOB_TABS = [{ k: 'quick', n: '记一笔' }, { k: 'today', n: '今日' }, { k: 'jobs', n: '求职' }, { k: 'more', n: '更多' }];
   $('.tabs-desk').innerHTML = DESK_TABS.map((t, i) => `<button class="tab" role="tab" data-tab="${t.k}" title="快捷键 ${i + 1}">${t.n}</button>`).join('');
   $('.tabs-mob').innerHTML = MOB_TABS.map(t => `<button class="tab" role="tab" data-tab="${t.k}">${t.n}</button>`).join('');
   // Phone quick page is one screen: stretch it to the top of the tab bar, then trim whatever the page still scrolls.
@@ -1138,7 +1194,7 @@ end</pre>
   function setTab(k) {
     if (!isPhone() && (k === 'quick' || k === 'more')) k = 'today';
     S.tab = k;
-    const mobKey = ['grad', 'jobs', 'money', 'food', 'settings'].includes(k) ? 'more' : k;
+    const mobKey = ['grad', 'money', 'food', 'settings'].includes(k) ? 'more' : k;
     $$('.tabs-desk .tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === k)));
     $$('.tabs-mob .tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === mobKey)));
     $$('.panel').forEach(p => p.classList.toggle('on', p.id === 'p-' + k));
@@ -1155,12 +1211,13 @@ end</pre>
       const m = l.match(/^(\d{1,2}:\d{2})\s*[-–—~]\s*(\d{1,2}:\d{2})\s+(.+)$/);
       if (!m) return null;
       const s = toMin(m[1]); let e = toMin(m[2]); if (e <= s) e += 1440;
-      return { s, e, w: m[3], src: 'tpl' };
+      const km = m[3].match(/\s#(rest|work|meet|sport|transit|gig|game)\s*$/);
+      return { s, e, w: km ? m[3].slice(0, km.index).trim() : m[3], kind: km ? km[1] : '', src: 'tpl' };
     }).filter(Boolean);
   }
   // Apply an edit to a day's schedule: new slots push aside whatever they overlap; named items can be removed. Old-style full text still works.
   function mergeSched(date, a) {
-    if (!Array.isArray(a.set) && !Array.isArray(a.remove)) return parseSched(String(a.text || '')).map(i => `${fmtMin(i.s)}-${fmtMin(i.e)} ${i.w}`).join('\n');
+    if (!Array.isArray(a.set) && !Array.isArray(a.remove)) return parseSched(String(a.text || '')).map(schedLine).join('\n');
     const hm2 = x => /^\d{1,2}:\d{2}$/.test(x || '') ? x.padStart(5, '0') : '';
     let items = parseSched(schedText(date));
     const rm = (a.remove || []).map(x => String(x).trim()).filter(Boolean);
@@ -1169,23 +1226,154 @@ end</pre>
       const st = hm2(sl && sl.start); if (!st || !sl.text) continue;
       const s = toMin(st); let e = hm2(sl.end) ? toMin(hm2(sl.end)) : s + 60; if (e <= s) e += 1440;
       items = items.flatMap(i => i.e <= s || i.s >= e ? [i] : [...(i.s < s ? [{ ...i, e: s }] : []), ...(i.e > e ? [{ ...i, s: e }] : [])]);
-      items.push({ s, e, w: String(sl.text).slice(0, 40) });
+      items.push({ s, e, w: String(sl.text).slice(0, 40), kind: KINDS.some(x => x.k === sl.kind) ? sl.kind : '' });
     }
-    return items.filter(i => i.e - i.s >= 5).sort((x, y) => x.s - y.s).map(i => `${fmtMin(i.s)}-${fmtMin(i.e)} ${i.w}`).join('\n');
+    return items.filter(i => i.e - i.s >= 5).sort((x, y) => x.s - y.s).map(schedLine).join('\n');
   }
   const schedText = date => { const d = getDay(date); return d.override != null ? d.override : S.settings.templates[wdIdx(date)]; };
   // Events added from "其他" (宣讲会、会议、预约…). They sit on the timeline like calendar events.
   const eventsOn = date => S.events.filter(e => e.date === date && /^\d{2}:\d{2}$/.test(e.start || '')).map(e => {
     const s = toMin(e.start); let en = /^\d{2}:\d{2}$/.test(e.end || '') ? toMin(e.end) : s + 60; if (en <= s) en = s + 60;
-    return { s, e: en, w: e.title + (e.location ? ` · ${e.location}` : ''), src: 'evt', ev: e };
+    return { s, e: en, w: e.title + (e.location ? ` · ${e.location}` : ''), src: 'evt', ev: e, kind: e.kind || '' };
   }).filter(x => !(S.cal[date] || []).some(c => c.s === x.s));
   function daySchedule(date) {
-    const tpl = parseSched(schedText(date));
+    const tpl = parseSched(schedText(date)).map((x, ti) => ({ ...x, ti }));
     const cal = [...(S.cal[date] || []).filter(e => !e.allDay), ...eventsOn(date)];
     if (!cal.length) return tpl;
     const keep = tpl.filter(t => !cal.some(c => c.s < t.e && c.e > t.s));
     return [...keep, ...cal].sort((a, b) => a.s - b.s);
   }
+
+  // ---------- timeline: a day grid edited like Google Calendar ----------
+  // Click empty space (or drag) to create, click a block to edit, drag it to move, drag its bottom edge to resize.
+  // Template blocks save into this day's override; panel events update their own doc; Google Calendar events can be opened or deleted.
+  const TL_K = 0.9, SNAP = 15;
+  const snapM = m => Math.round(m / SNAP) * SNAP, floorM = m => Math.floor(m / SNAP) * SNAP;
+  let tlRange = { a: 420, b: 1440 }, tlItems = [];
+  const tlKey = i => i.src === 'cal' ? 'cal:' + i.id : i.src === 'evt' ? 'evt:' + i.ev.id : 'tpl:' + i.ti;
+  const tlEditable = k => !!k && !k.startsWith('cal:');
+  const tlTimes = (a, b) => `${fmtMin(a)}–${fmtMin(b)}`;
+  function renderTimeline(items, isT, nm) {
+    const box = $('#timeline'); if (S.tlDrag) return;
+    tlItems = items;
+    const a = Math.min(420, ...items.map(i => Math.floor(i.s / 60) * 60)), b = Math.max(1440, ...items.map(i => Math.ceil(i.e / 60) * 60));
+    tlRange = { a, b: Math.min(b, 1560) };
+    // Side-by-side columns for blocks that overlap, like Google Calendar.
+    const lay = {}; let cl = [], end = -1;
+    const flush = () => { const cols = []; cl.forEach(o => { let c = cols.findIndex(x => x <= o.i.s); if (c < 0) { c = cols.length; cols.push(0); } cols[c] = o.i.e; o.c = c; }); cl.forEach(o => { lay[o.n] = { c: o.c, n: cols.length }; }); cl = []; };
+    items.map((i, n) => ({ i, n })).sort((x, y) => x.i.s - y.i.s || y.i.e - x.i.e).forEach(o => { if (o.i.s >= end) { flush(); end = -1; } cl.push(o); end = Math.max(end, o.i.e); }); flush();
+    let h = '';
+    for (let m = tlRange.a; m <= tlRange.b; m += 60) h += `<div class="tlh" style="top:${(m - tlRange.a) * TL_K}px"><span>${m < tlRange.b ? fmtMin(m) : ''}</span></div>`;
+    items.forEach((i, n) => {
+      const k = tlKey(i), L = lay[n], top = (i.s - tlRange.a) * TL_K, ht = Math.max(16, (i.e - i.s) * TL_K - 2);
+      const cls = !isT ? '' : (nm >= i.s && nm < i.e) ? 'cur' : nm >= i.e ? 'past' : '';
+      h += `<div class="tlb ${cls} k-${kindOf(i)}${S.tlSel === k ? ' sel' : ''}${ht < 34 ? ' short' : ''}" data-k="${esc(k)}" style="top:${top}px;height:${ht}px;left:calc(${L.c} * 100% / ${L.n});width:calc(100% / ${L.n} - 3px)"><b>${esc(i.w)}</b><span>${tlTimes(i.s, i.e)}${i.src === 'cal' ? ' · 日历' : i.src === 'evt' ? ' · 活动' : ''}</span>${tlEditable(k) ? '<i class="rh"></i>' : ''}</div>`;
+    });
+    if (S.tlNew) h += `<div class="tlb tlghost" style="top:${(S.tlNew.s - tlRange.a) * TL_K}px;height:${Math.max(16, (S.tlNew.e - S.tlNew.s) * TL_K - 2)}px;left:0;width:calc(100% - 3px)"><b>（无标题）</b><span>${tlTimes(S.tlNew.s, S.tlNew.e)}</span></div>`;
+    if (isT && nm >= tlRange.a && nm <= tlRange.b) h += `<div class="tlnow" style="top:${(nm - tlRange.a) * TL_K}px"></div>`;
+    box.innerHTML = `<div class="tlg-in" style="height:${(tlRange.b - tlRange.a) * TL_K + 8}px">${h}</div>`;
+    if (box.dataset.auto !== S.sel && S.tab === 'today') { box.dataset.auto = S.sel; const first = items.find(i => !isT || i.e > nm) || items[0]; const y = ((isT ? nm : first ? first.s : 480) - tlRange.a) * TL_K - 90; requestAnimationFrame(() => { box.scrollTop = Math.max(0, y); }); }
+    if (S.tlPop) placeTlPop();
+  }
+  const tlY = e => e.clientY - $('#timeline .tlg-in').getBoundingClientRect().top;
+  function tlSaveTpl(list, msg) {
+    const date = S.sel, prev = getDay(date).override ?? null;
+    const text = list.filter(x => x.e - x.s >= 5).sort((x, y) => x.s - y.s).map(schedLine).join('\n');
+    saveDay(date, d => { d.override = text; }); toast(msg, () => saveDay(date, d => { d.override = prev; }));
+  }
+  async function tlCommit(k, patch) {
+    if (k.startsWith('tpl:')) { const list = parseSched(schedText(S.sel)); const x = list[+k.slice(4)]; if (!x) return; Object.assign(x, patch); return tlSaveTpl(list, `已改：${tlTimes(x.s, x.e)} ${x.w}`); }
+    if (k.startsWith('evt:')) {
+      const ev = S.events.find(x => x.id === k.slice(4)); if (!ev) return;
+      const body = { ...(patch.s != null ? { start: fmtMin(patch.s), end: fmtMin(patch.e) } : {}), ...(patch.w != null ? { title: String(patch.w).slice(0, 80) } : {}), ...(patch.kind ? { kind: patch.kind } : {}) };
+      const prev = { start: ev.start, end: ev.end || '', title: ev.title }; Object.assign(ev, body); render();
+      if (await write(db => db.doc('events/' + ev.id).update(body))) toast(`已改：${tlTimes(toMin(ev.start), toMin(ev.end || ev.start))} ${ev.title}`, () => write(db => db.doc('events/' + ev.id).update(prev)));
+    }
+  }
+  async function tlDelete(k) {
+    const it = tlItems.find(i => tlKey(i) === k); if (!it) return; closeTlPop(true);
+    if (k.startsWith('tpl:')) { const list = parseSched(schedText(S.sel)); list.splice(+k.slice(4), 1); return tlSaveTpl(list, `已删除「${it.w}」`); }
+    if (k.startsWith('evt:')) { const { id, ...body } = it.ev; if (await write(db => db.doc('events/' + id).delete())) toast(`已删除「${body.title}」`, () => write(db => db.doc('events/' + id).set(body))); return; }
+    if (k.startsWith('cal:') && S.mcp) { try { await S.mcp.callTool(GCAL, 'delete_event', { eventId: it.id }); toast(`已从 Google 日历删除「${it.w}」`); loadCal(true); } catch (e) { toast('日历没删成功，去 Google 日历里删'); } }
+  }
+  function closeTlPop(silent) { const had = S.tlPop || S.tlNew || S.tlSel; S.tlPop = null; S.tlNew = null; S.tlSel = null; $('#tlPop').hidden = true; if (had && !silent) render(); }
+  function openTlPop(k) {
+    S.tlPop = { k }; S.tlSel = k || null; const pop = $('#tlPop');
+    const it = k ? tlItems.find(i => tlKey(i) === k) : { s: S.tlNew.s, e: S.tlNew.e, w: '' }; if (!it) return closeTlPop();
+    if (k && k.startsWith('cal:')) {
+      pop.innerHTML = `<div class="tlp-h">${esc(it.w)}</div><div class="tlp-s">${tlTimes(it.s, it.e)} · Google 日历${it.loc ? ` · ${esc(it.loc)}` : ''}</div><div class="row">${it.link ? `<a class="pill sm out" href="${esc(it.link)}" target="_blank" rel="noopener">在日历里打开 ↗</a>` : ''}${S.mcp ? '<button class="pill sm danger" type="button" data-tldel>从日历删除</button>' : ''}<button class="pill sm out" type="button" data-tlclose>关闭</button></div>`;
+    } else {
+      const w = it.src === 'evt' ? it.ev.title : it.w;
+      pop.innerHTML = `<form id="tlForm"><input class="field tlp-t" name="w" value="${esc(w)}" placeholder="添加标题" autocomplete="off" aria-label="标题"><div class="tlp-time"><input class="field" type="time" name="s" step="900" value="${fmtMin(it.s)}" aria-label="开始">–<input class="field" type="time" name="e" step="900" value="${fmtMin(it.e)}" aria-label="结束"></div><div class="tlp-kinds" role="radiogroup" aria-label="颜色">${['rest', 'work', 'meet', 'sport', 'transit', 'gig', 'game'].map(k => KINDS.find(x => x.k === k)).map(x => `<label class="k-${x.k}" title="${x.n}"><input type="radio" name="kind" value="${x.k}" ${(k ? kindOf(it) : '') === x.k ? 'checked' : ''}><i></i><span>${x.n}</span></label>`).join('')}</div><div class="row"><button class="pill sm" type="submit">保存</button>${k ? '<button class="pill sm danger" type="button" data-tldel>删除</button>' : ''}<button class="pill sm out" type="button" data-tlclose>取消</button></div></form>`;
+    }
+    pop.hidden = false; render(); placeTlPop();
+    const t = pop.querySelector('.tlp-t'); if (t && !k) t.focus();
+  }
+  function placeTlPop() {
+    const pop = $('#tlPop'); if (pop.hidden) return; if (isPhone()) { pop.style.left = ''; pop.style.top = ''; return; }
+    const el = S.tlPop.k ? $(`#timeline [data-k="${CSS.escape(S.tlPop.k)}"]`) : $('#timeline .tlghost'); if (!el) return;
+    const r = el.getBoundingClientRect(), w = pop.offsetWidth, h = pop.offsetHeight;
+    let x = r.right + 10; if (x + w > innerWidth - 10) x = Math.max(10, r.left - w - 10);
+    pop.style.left = x + 'px'; pop.style.top = Math.min(Math.max(70, r.top), innerHeight - h - 10) + 'px';
+  }
+  $('#timeline').addEventListener('pointerdown', e => {
+    if (e.button > 0 || !$('#timeline .tlg-in')) return;
+    const blk = e.target.closest('.tlb:not(.tlghost)'), touch = e.pointerType === 'touch', y0 = tlY(e);
+    if (blk) {
+      const k = blk.dataset.k, it = tlItems.find(i => tlKey(i) === k); if (!it) return;
+      if (!tlEditable(k) || (touch && S.tlSel !== k)) S.tlDrag = { k, mode: 'tap', y0 };
+      else { S.tlDrag = { k, mode: e.target.classList.contains('rh') ? 'resize' : 'move', blk, y0, s: it.s, e: it.e }; e.preventDefault(); $('#timeline').setPointerCapture(e.pointerId); }
+    } else {
+      if (S.tlPop) { S.tlDrag = { mode: 'dismiss', y0 }; return; }
+      const s = floorM(tlRange.a + y0 / TL_K); S.tlDrag = { mode: touch ? 'tapnew' : 'new', y0, s, e: s + SNAP };
+      if (!touch) { e.preventDefault(); $('#timeline').setPointerCapture(e.pointerId); }
+    }
+  });
+  $('#timeline').addEventListener('pointermove', e => {
+    const d = S.tlDrag; if (!d) return; const dy = tlY(e) - d.y0;
+    if (!d.moved && Math.abs(dy) < 5) return; d.moved = true;
+    if (d.mode === 'move' || d.mode === 'resize') {
+      if (d.mode === 'move') { const len = d.e - d.s; d.ns = Math.min(Math.max(snapM(d.s + dy / TL_K), tlRange.a), tlRange.b - len); d.ne = d.ns + len; }
+      else { d.ns = d.s; d.ne = Math.min(Math.max(d.s + SNAP, snapM(d.e + dy / TL_K)), tlRange.b); }
+      d.blk.classList.add('drag'); d.blk.style.top = (d.ns - tlRange.a) * TL_K + 'px'; d.blk.style.height = Math.max(16, (d.ne - d.ns) * TL_K - 2) + 'px';
+      const sp = d.blk.querySelector('span'); if (sp) sp.textContent = tlTimes(d.ns, d.ne);
+    } else if (d.mode === 'new') {
+      const m = snapM(tlRange.a + tlY(e) / TL_K); d.ns = Math.min(d.s, m); d.ne = Math.max(d.ns + SNAP, Math.max(d.s + SNAP, m));
+      if (!d.ghost) { d.ghost = document.createElement('div'); d.ghost.className = 'tlb tlghost'; d.ghost.style.left = '0'; d.ghost.style.width = 'calc(100% - 3px)'; $('#timeline .tlg-in').appendChild(d.ghost); }
+      d.ghost.style.top = (d.ns - tlRange.a) * TL_K + 'px'; d.ghost.style.height = (d.ne - d.ns) * TL_K - 2 + 'px'; d.ghost.innerHTML = `<b>（无标题）</b><span>${tlTimes(d.ns, d.ne)}</span>`;
+    }
+  });
+  $('#timeline').addEventListener('pointerup', () => {
+    const d = S.tlDrag; if (!d) return; S.tlDrag = null;
+    if (d.mode === 'dismiss') { if (!d.moved) closeTlPop(); return; }
+    if (d.mode === 'tap' || ((d.mode === 'move' || d.mode === 'resize') && !d.moved)) { if (!d.moved) openTlPop(d.k); else render(); return; }
+    if (d.mode === 'move' || d.mode === 'resize') { if (d.ns === d.s && d.ne === d.e) return render(); return tlCommit(d.k, { s: d.ns, e: d.ne }); }
+    if (d.mode === 'tapnew' && d.moved) return;
+    S.tlNew = d.mode === 'new' && d.moved ? { s: d.ns, e: d.ne } : { s: d.s, e: d.s + 60 }; openTlPop(null);
+  });
+  $('#timeline').addEventListener('pointercancel', () => { if (S.tlDrag) { S.tlDrag = null; render(); } });
+  $('#tlPop').addEventListener('submit', e => {
+    e.preventDefault(); const f = e.target, w = f.w.value.trim(); if (!w) { f.w.focus(); return toast('写个标题'); }
+    if (!/^\d{2}:\d{2}$/.test(f.s.value) || !/^\d{2}:\d{2}$/.test(f.e.value)) return toast('时间格式不对');
+    const s = toMin(f.s.value); let en = toMin(f.e.value); if (en <= s) en += 1440;
+    const k = S.tlPop && S.tlPop.k; const kr = f.querySelector('[name=kind]:checked'); const kind = kr ? kr.value : ''; closeTlPop(true);
+    if (!k) { const list = parseSched(schedText(S.sel)); list.push({ s, e: en, w, kind }); return tlSaveTpl(list, `已添加：${tlTimes(s, en)} ${w}`); }
+    tlCommit(k, { s, e: en, w, ...(kind ? { kind } : {}) });
+  });
+  $('#tlPop').addEventListener('click', e => {
+    if (e.target.closest('[data-tlclose]')) return closeTlPop();
+    const del = e.target.closest('[data-tldel]'); if (!del) return;
+    const k = S.tlPop && S.tlPop.k; if (!k) return;
+    if (k.startsWith('cal:') && !del.dataset.sure) { del.dataset.sure = '1'; del.textContent = '再点一次确认删除'; return; }
+    tlDelete(k);
+  });
+  document.addEventListener('keydown', e => {
+    if (!S.tlPop) return;
+    if (e.key === 'Escape') { e.preventDefault(); closeTlPop(); }
+    else if ((e.key === 'Delete' || e.key === 'Backspace') && S.tlPop.k && !e.target.matches('input, textarea, select')) { e.preventDefault(); if (!S.tlPop.k.startsWith('cal:')) tlDelete(S.tlPop.k); }
+  });
+  document.addEventListener('pointerdown', e => { if (S.tlPop && !e.target.closest('#tlPop, #timeline')) closeTlPop(); });
+  addEventListener('resize', () => { if (S.tlPop) placeTlPop(); });
 
   // ---------- derived ----------
   const weekDates = date => { const s = weekStart(date); return [0, 1, 2, 3, 4, 5, 6].map(i => addDays(s, i)); };
@@ -1283,10 +1471,12 @@ end</pre>
   const monthExpenses = mo => { const ids = new Set(); return [...S.allExp, ...S.expenses, ...S.bofa].filter(e => e.month === mo && !ids.has(e.id) && ids.add(e.id)); };
   // Fixed costs come from real payments (cat 'fixed'). A recurring item only counts as "expected" in the
   // current month (or later) while no matching payment has shown up yet — past months use bank data only.
-  const recPaid = (r, mo) => monthExpenses(mo).some(e => e.cat === 'fixed' && !e.ignored && (`${e.merchant || ''} ${e.note || ''}`.toLowerCase().includes(String(r.name).toLowerCase()) || Math.abs((+e.amount || 0) - (+r.amount || 0)) <= (+r.amount || 0) * .1));
+  // A payment counts as a fixed cost if it was marked fixed, is housing, or matches a recurring item's category and amount (±10%).
+  const isFixed = e => e.fixed === true || e.cat === 'housing' || S.recurring.some(r => r.cat === e.cat && r.cat !== 'other' && Math.abs((+e.amount || 0) - (+r.amount || 0)) <= (+r.amount || 0) * .1);
+  const recPaid = (r, mo) => monthExpenses(mo).some(e => isFixed(e) && !e.ignored && (`${e.merchant || ''} ${e.note || ''}`.toLowerCase().includes(String(r.name).toLowerCase()) || Math.abs((+e.amount || 0) - (+r.amount || 0)) <= (+r.amount || 0) * .1));
   const expectedRec = mo => mo >= monthOf(todayStr()) ? S.recurring.filter(r => !recPaid(r, mo)) : [];
   const expectedTotal = mo => expectedRec(mo).reduce((a, r) => a + (+r.amount || 0), 0);
-  const fixedPaid = mo => monthExpenses(mo).filter(e => e.cat === 'fixed' && !e.ignored).reduce((a, e) => a + (+e.amount || 0), 0);
+  const fixedPaid = mo => monthExpenses(mo).filter(e => isFixed(e) && !e.ignored).reduce((a, e) => a + (+e.amount || 0), 0);
   const monthTotal = mo => monthExpenses(mo).reduce((a, e) => a + (+e.amount || 0), 0) + expectedTotal(mo);
   const pendingTxns = () => S.bofa.filter(e => !e.cat && !e.ignored).sort((a, b) => b.date.localeCompare(a.date));
   const upcomingSchools = () => S.schools.filter(s => s.deadline && !(s.materials || {}).submitted).sort((a, b) => a.deadline.localeCompare(b.deadline));
@@ -1317,7 +1507,7 @@ end</pre>
     } catch (err) { S.conn.cal = CAL_ERR[err && err.code] || 'error'; }
     render();
   }
-  function render() { if (S.mcp && calWeek !== weekStart(S.sel)) loadCal(); renderHeader(); renderToday(); renderQuick(); renderWeek(); renderSchools(); renderJobs(); renderLife(); renderFit(); renderSettingsPage(); }
+  function render() { if (S.mcp && calWeek !== weekStart(S.sel)) loadCal(); renderHeader(); renderToday(); renderQuick(); renderSchools(); renderJobs(); renderLife(); renderFit(); renderSettingsPage(); }
   function renderHeader() {
     const d = parseYmd(S.sel); const diff = daysBetween(todayStr(), S.sel);
     const rel = diff === 0 ? '今天' : diff === -1 ? '昨天' : diff === 1 ? '明天' : '';
@@ -1350,13 +1540,10 @@ end</pre>
     // 现在卡片只放大字和进度条；接下来几项看下面的时间线，待办看右列。
     $('#nowCard').innerHTML = nowHtml;
 
-    $('#timeline').innerHTML = items.length ? items.map(i => {
-      const cls = !isT ? '' : (nm >= i.s && nm < i.e) ? 'cur' : nm >= i.e ? 'past' : '';
-      return `<div class="tl-i ${cls} cat-${i.src === 'cal' || i.src === 'evt' ? 'cal' : catOf(i.w)}"><span class="t">${fmtMin(i.s)}–${fmtMin(i.e)}</span><span class="d"></span><span class="w">${esc(i.w)}</span><span class="src">${i.src === 'cal' ? (i.link ? `<a href="${esc(i.link)}" target="_blank" rel="noopener">日历 ↗</a>` : '日历') : i.src === 'evt' ? (i.ev.link ? `<a href="${esc(i.ev.link)}" target="_blank" rel="noopener">活动 ↗</a>` : '活动') : ''}</span></div>`;
-    }).join('') : '<div class="empty">这一天没有安排。</div>';
-    { const tl = $('#timeline'), cur = tl.querySelector('.tl-i.cur'); if (cur && !isPhone() && S.tab === 'today' && tl.dataset.auto !== S.sel + cur.textContent) { tl.dataset.auto = S.sel + cur.textContent; requestAnimationFrame(() => cur.scrollIntoView({ block: 'center' })); } }
-    $('#editSched').textContent = day.override != null ? '调整今天（已改动）' : '调整今天';
-    $('#calNote').textContent = S.conn.cal === 'ok' ? '' : '连接 Google 日历后，会议和 Luma 活动会自动出现在这里。';
+    renderTimeline(items, isT, nm);
+    $('#schedReset').hidden = day.override == null;
+    $('#tlLegend').innerHTML = ['rest', 'work', 'meet', 'sport', 'transit', 'gig', 'game'].map(k => KINDS.find(x => x.k === k)).map(x => `<span class="k-${x.k}"><i></i>${x.n}</span>`).join('');
+    $('#calNote').textContent = (isPhone() ? '点空白处新建，点一下选中后可拖动。' : '点空白处新建，拖动改时间，拖下边缘改时长。') + (S.conn.cal === 'ok' ? '' : '连上 Google 日历后，会议也会出现在这里。');
 
     const keys = todayCheckKeys();
     const stack = ks => `<div class="ckstack">${ks.map(k => checkRow(day, CHECKS.find(c => c.k === k), true)).join('')}</div>`;
@@ -1457,7 +1644,7 @@ end</pre>
 
   function txnHtml(e) {
     return `<div class="txn"><div class="txn-h"><b>${esc(e.merchant || '交易')}</b><span class="num">${money(+e.amount || 0)} · ${e.date.slice(5)}</span></div>
-      <div class="chipset">${EXP_CATS.filter(c => c.k !== 'fixed').map(c => `<button class="chip" data-txncat="${c.k}" data-txn="${esc(e.id)}">${c.n}</button>`).join('')}<button class="chip" data-txnignore="${esc(e.id)}" title="不计入花费，比如转账或还款">忽略</button></div></div>`;
+      <div class="chipset">${EXP_CATS.filter(c => c.k !== 'housing').map(c => `<button class="chip" data-txncat="${c.k}" data-txn="${esc(e.id)}">${c.n}</button>`).join('')}<button class="chip" data-txnignore="${esc(e.id)}" title="不计入花费，比如转账或还款">忽略</button></div></div>`;
   }
   function attentionItems() {
     const t = todayStr(); const out = [];
@@ -1473,7 +1660,6 @@ end</pre>
     const js = jobStats();
     if (js.newToday) out.push({ h: `今天新增 ${js.newToday} 个岗位`, sub: '去看看', go: 'jobs' });
     upcomingSchools().filter(s => daysBetween(t, s.deadline) <= 30).forEach(s => { const n = daysBetween(t, s.deadline); out.push({ red: n <= 14, h: `${esc(s.name)} ${n < 0 ? '已过截止' : `截止还剩 ${n} 天`}`, sub: `材料 ${MATS.filter(m => (s.materials || {})[m.k]).length}/${MATS.length}`, go: 'grad' }); });
-    if (wdIdx(t) === 6 && !(S.reviews[isoWeekId(t)] || {}).savedAt) out.push({ h: '今天是复盘日', sub: '写下下周重点', go: 'week' });
     if (wdIdx(t) <= 1) { const lw = S.reviews[isoWeekId(addDays(t, -7))] || {}; if ((lw.next || '').trim()) out.unshift({ key: 'lastweek-' + isoWeekId(t), h: '上周复盘定的本周重点', body: `<div class="lw">${esc(lw.next.trim())}</div>` }); }
     if (['missing', 'reauth', 'denied'].includes(S.conn.gmail)) out.push({ red: true, h: 'Gmail 没连上，自动数据暂停', sub: '查看原因', go: 'settings' });
     else if (S.conn.gmail === 'ok') {
@@ -1715,7 +1901,7 @@ ${list.map(({ t, lv }) => `${t.id} | ${t.text} | ${LV[lv]} | ${t.due || '无'} |
     } else if (S.parsed && S.parsed.where === where) {
       const p = S.parsed; pv.hidden = false;
       pv.innerHTML = (p.expense ? `<div class="prev-r"><span class="tag">花费</span>$<input class="field" data-pe="amount" type="number" step="0.01" value="${p.expense.amount ?? ''}" aria-label="金额"><input class="field wide" data-pe="note" value="${esc(p.expense.note || '')}" aria-label="备注"></div>
-          <div class="chipset">${EXP_CATS.filter(c => c.k !== 'fixed').map(c => `<button class="chip ${p.expense.cat === c.k ? 'on' : ''}" data-pcat="${c.k}">${c.n}</button>`).join('')}</div>` : '')
+          <div class="chipset">${EXP_CATS.filter(c => c.k !== 'housing').map(c => `<button class="chip ${p.expense.cat === c.k ? 'on' : ''}" data-pcat="${c.k}">${c.n}</button>`).join('')}</div>` : '')
         + (p.food && p.food.per100 ? `<div class="prev-r"><span class="tag">饮食</span><input class="field wide" data-pf="name" value="${esc(p.food.name || '')}" aria-label="食物"></div>
           <div class="prev-r"><input class="field" data-pf="g" type="number" min="0" value="${p.food.g}" aria-label="克数">g<span class="saved">=</span><input class="field" data-pf="p" type="number" value="${p.food.p}" aria-label="蛋白质 g">g 蛋白<input class="field" data-pf="k" type="number" value="${p.food.k}" aria-label="热量 kcal">kcal</div>
           ${p.food.portions && p.food.portions.length ? `<div class="chipset">${p.food.portions.map(([d, g]) => `<button class="chip" data-por="${g}">${esc(d)} · ${g}g</button>`).join('')}</div>` : ''}
@@ -1803,7 +1989,7 @@ ${list.map(({ t, lv }) => `${t.id} | ${t.text} | ${LV[lv]} | ${t.due || '无'} |
       S.parsing = where; renderQE(where);
       try {
         r = await S.sample.json(
-          `把用户的一句话记录解析成 JSON，只输出 JSON。格式：{"expense":{"amount":数字,"cat":"food|transport|fun|sport|shop|other","note":"简短说明"} 或 null,"food":{"name":"食物","p":蛋白质克数,"k":热量千卡} 或 null}。只有提到金额才给 expense；只有提到吃喝的东西才给 food，并按常见份量估算 p 和 k（整数）。\n记录：${text}`,
+          `把用户的一句话记录解析成 JSON，只输出 JSON。格式：{"expense":{"amount":数字,"cat":"${CAT_KEYS}","note":"简短说明"} 或 null,"food":{"name":"食物","p":蛋白质克数,"k":热量千卡} 或 null}。只有提到金额才给 expense；只有提到吃喝的东西才给 food，并按常见份量估算 p 和 k（整数）。\n记录：${text}`,
           { modelTier: 'quick' });
         if (r && r.food) r.food.est = true;
       } catch (e) { r = null; }
@@ -1878,16 +2064,16 @@ ${list.map(({ t, lv }) => `${t.id} | ${t.text} | ${LV[lv]} | ${t.due || '无'} |
 今天是 ${t}（周${'一二三四五六日'[wdIdx(t)]}）。日期相关的记录可以带 "date":"YYYY-MM-DD"（比如"昨天"），不带就是今天。
 可用的记录类型：
 - {"type":"food","name":"食物","p":蛋白质克数,"k":热量千卡} 按常见份量估算，整数
-- {"type":"expense","amount":数字,"cat":"food|transport|fun|sport|shop|other","note":"简短说明"}
+- {"type":"expense","amount":数字,"cat":"${CAT_KEYS}","note":"简短说明"} 类别：${CAT_GUIDE}
 - {"type":"todo","text":"待办内容","due":"YYYY-MM-DD 可选"} 将来要做的事；"明天要做 A、B" 就拆成几条 todo，due 填明天
 - {"type":"event","title":"简短活动名","date":"YYYY-MM-DD","start":"HH:MM","end":"HH:MM（不知道就省略）","location":"地点（可选）","link":"相关链接（可选）","note":"要带的东西等（可选）"} 有具体日期和开始时间的活动：宣讲会、会议、面试、预约、聚会。会放进那天的时间线。粘贴的邀请邮件也照此提取；邮件里有要先做的事（比如点链接确认到场），再另加一条 todo，due 填活动前一天
 - {"type":"todo_done","id":"待办 id"} 说某件待办做完了
 - {"type":"todo_update","id":"待办 id","text":"新标题（可选）","due":"YYYY-MM-DD（可选）","plan":"YYYY-MM-DD（可选，安排在哪天做）"} 改待办、推迟、"明天再做"
 - {"type":"todo_delete","id":"待办 id"} 明确说不做了 / 删掉
-- {"type":"recurring","name":"名称","amount":数字,"cat":"fixed"} 每月固定支出（房租、订阅）
-- {"type":"txn","id":"待分类交易 id","cat":"food|transport|fun|sport|shop|other|ignore"} 给 BofA 交易归类
+- {"type":"recurring","name":"名称","amount":数字,"cat":"${CAT_KEYS}"} 每月固定支出（房租→housing、车险→transport、话费→utilities）
+- {"type":"txn","id":"待分类交易 id","cat":"${CAT_KEYS}|ignore"} 给 BofA 交易归类
 - {"type":"settings","budget":数字,"protein":克,"kcal":千卡,"goals":{"reading":0-7,"plan":0-7,"gym":0-7}} 只写要改的字段
-- {"type":"schedule","date":"YYYY-MM-DD","set":[{"start":"HH:MM","end":"HH:MM","text":"事项（简短）"}],"remove":["要从那天安排里去掉的事项名（可选）"]} 改某天的时间线：自己的安排（"3 点到 5 点去健身"、"下午改成写简历"、"晚上不打 maimai 了"）都用这条。set 只列新加或替换的时段，原安排里和它重叠的部分会自动让出；不知道结束时间就按合理时长估。有别人参与、需要写进日历的活动（会议、面试、聚会、预约）才用 event
+- {"type":"schedule","date":"YYYY-MM-DD","set":[{"start":"HH:MM","end":"HH:MM","text":"事项（简短）","kind":"${KIND_KEYS}"}],"remove":["要从那天安排里去掉的事项名（可选）"]} 改某天的时间线：自己的安排（"上午写简历两小时，下午去健身，晚上打 maimai"、"明天 10 点开会"、"晚上不打 maimai 了"）都用这条，可以一次给多个时段。set 只列新加或替换的时段，原安排里和它重叠的部分会自动让出。只说了时长没说具体时间时，按顺序从那个时段的第一个空档排起：上午从起床/早餐结束后开始，下午从午餐/午休结束后开始，晚上从晚餐结束后开始，不要压到起床、三餐和午休上；连说几件事就首尾相接排下去；没说时长按常理估。kind 是颜色分类：rest=休息、work=工作/学习、meet=开会/重要活动、sport=运动、transit=开车路上/损耗时间、gig=拍摄打工或其他活动、game=游戏或 maimai。有别人参与、需要写进日历的活动（会议、面试、聚会、预约）才用 event
 - {"type":"sleep_now","which":"bed|wake"} 现在要睡了 / 刚起来坐到桌前
 - {"type":"check","item":"reading|plan|pickleball|shake|creatine"} shake = 喝了蛋白粉（会自动记一勺进饮食，不要再另记 food），creatine = 吃了肌酸 今天读过书 / 已经做好明天的计划 / 打了 Pickleball
 - {"type":"gym","parts":["shoulder","chest","back","core"] 的子集} 练了哪些部位（二头算背，三头算胸）
@@ -1905,6 +2091,8 @@ ${S.todos.map(x => `${x.id}|${x.text}|${x.due || ''}|${x.plan || ''}`).join('\n'
 ${pendingTxns().map(x => `${x.id}|${x.amount}|${x.merchant || x.note || ''}|${x.date}`).join('\n') || '（无）'}
 ${t} 当前安排：
 ${daySchedule(t).map(i => `${fmtMin(i.s)}-${fmtMin(i.e)} ${i.w}${i.src === 'cal' ? '（日历）' : ''}`).join('\n')}
+${addDays(t, 1)}（明天）当前安排：
+${daySchedule(addDays(t, 1)).map(i => `${fmtMin(i.s)}-${fmtMin(i.e)} ${i.w}${i.src === 'cal' ? '（日历）' : ''}`).join('\n') || '（空）'}
 Google 日历本周已有：${Object.entries(S.cal).flatMap(([d, l]) => l.filter(x => !x.allDay).map(x => `${d} ${fmtMin(x.s)} ${x.w}`)).join('；') || '（无或未连接）'}
 设置：预算 ${+S.settings.budget || '未设'}，蛋白目标 ${+S.settings.food.protein || '未设'}，热量目标 ${+S.settings.food.kcal || '未设'}，每周目标 阅读 ${S.settings.goals.reading} 计划 ${S.settings.goals.plan} 健身 ${S.settings.goals.gym}；现在${openSleep() ? `在睡觉（${hhmm(openSleep().bed)} 躺下）` : '醒着'}
 
@@ -1927,7 +2115,7 @@ Google 日历本周已有：${Object.entries(S.cal).flatMap(([d, l]) => l.filter
     try {
       r = await S.sample.json(`这是 Izzy 刚拍的照片，通常是他吃的或喝的东西，也可能是小票/收据。今天是 ${S.sel}。${hint.trim() ? `他补充说：「${hint.trim()}」。` : ''}
 如果是食物或饮料：认出每一样（按照片里的份量估，一人份为主；吃剩的、看起来是多人分享的按一人份），给中文名称、估计克数或份量、蛋白质克数、热量千卡，都是整数。
-如果是小票/收据：读出总金额、商家，判断类别 food|transport|fun|sport|shop|other；小票上是餐厅或饮品时，也按小票上的菜名给出食物条目。
+如果是小票/收据：读出总金额、商家，判断类别（${CAT_GUIDE}）；小票上是餐厅或饮品时，也按小票上的菜名给出食物条目。
 只输出 JSON：{"items":[{"name":"名称（带份量，如 拿铁 大杯）","p":蛋白质,"k":热量}],"expense":{"amount":数字,"cat":"类别","note":"商家"} 或 null,"reply":"一句话说明认出了什么；看不清就直说"}`, { images: [file], modelTier: 'default' });
     } catch (e) { r = null; S.parsing = null; renderQE(where); toast(e && e.code === 'image_rejected' ? '这张照片太大或格式不支持，换一张试试' : e && e.code === 'rate_limited' ? 'Claude 有点忙，稍后再试' : '没认出来，换个角度再拍一张'); return; }
     S.parsing = null;
@@ -1985,7 +2173,7 @@ Google 日历本周已有：${Object.entries(S.cal).flatMap(([d, l]) => l.filter
           if (Object.keys(patch).length && await write(db => db.doc('todos/' + t.id).update(patch))) { msgs.push(`改了 ${t.text}`); undos.push(() => write(db => db.doc('todos/' + t.id).update(prev))); }
         }
         else if (a.type === 'todo_delete') { const t = S.todos.find(x => x.id === a.id); const copy = Object.fromEntries(Object.entries(t).filter(([k]) => k !== 'id')); if (await write(db => db.doc('todos/' + t.id).delete())) { msgs.push(`删了 ${t.text}`); undos.push(() => write(db => db.doc('todos/' + t.id).set(copy))); } }
-        else if (a.type === 'recurring') { const id = newId('rc'); if (await write(db => db.doc('recurring/' + id).set({ name: String(a.name).slice(0, 40), amount: Math.round(+a.amount * 100) / 100, cat: EXP_CATS.some(c => c.k === a.cat) ? a.cat : 'fixed' }))) { msgs.push(`固定支出 ${a.name}`); undos.push(() => write(db => db.doc('recurring/' + id).delete())); } }
+        else if (a.type === 'recurring') { const id = newId('rc'); if (await write(db => db.doc('recurring/' + id).set({ name: String(a.name).slice(0, 40), amount: Math.round(+a.amount * 100) / 100, cat: EXP_CATS.some(c => c.k === a.cat) ? a.cat : 'housing' }))) { msgs.push(`固定支出 ${a.name}`); undos.push(() => write(db => db.doc('recurring/' + id).delete())); } }
         else if (a.type === 'txn') { const x = S.bofa.find(y => y.id === a.id); const prev = { cat: x.cat || '', ignored: !!x.ignored, amount: x.amount }; const patch = a.cat === 'ignore' ? { ignored: true, amount: 0 } : { cat: a.cat };
           if (await write(db => db.doc('expenses/' + x.id).update(patch))) { msgs.push(a.cat === 'ignore' ? '忽略交易' : `归为${expName(a.cat)}`); undos.push(() => write(db => db.doc('expenses/' + x.id).update(prev))); } }
         else if (a.type === 'settings') {
@@ -1996,7 +2184,7 @@ Google 日历本周已有：${Object.entries(S.cal).flatMap(([d, l]) => l.filter
           if (Object.keys(patch).length && await write(db => db.doc('settings/main').set({ ...st, ...patch }))) { msgs.push([patch.budget != null ? `月预算 ${money(patch.budget)}` : '', a.protein != null ? `蛋白目标 ${+a.protein}g` : '', a.kcal != null ? `热量目标 ${+a.kcal}` : '', patch.goals ? '每周目标' : ''].filter(Boolean).join('、')); undos.push(() => write(db => db.doc('settings/main').set({ ...S.settings, ...prev }))); }
         }
         else if (a.type === 'schedule') {
-          const cur = parseSched(schedText(a.date)).map(i => `${fmtMin(i.s)}-${fmtMin(i.e)} ${i.w}`).join('\n'); const next = mergeSched(a.date, a);
+          const cur = parseSched(schedText(a.date)).map(schedLine).join('\n'); const next = mergeSched(a.date, a);
           if (next === cur) { msgs.push(`${a.date.slice(5).replace('-', '/')} 的安排没有变化`); continue; }
           const prev = getDay(a.date).override ?? null; saveDay(a.date, d => { d.override = next; });
           const what = (a.set || []).filter(x => x && x.text && hm(x.start)).map(x => `${hm(x.start)}${hm(x.end) ? '–' + hm(x.end) : ''} ${x.text}`).concat((a.remove || []).map(x => `去掉 ${x}`));
@@ -2070,37 +2258,6 @@ Google 日历本周已有：${Object.entries(S.cal).flatMap(([d, l]) => l.filter
   }
 
   // ---------- week / grad / jobs / life ----------
-  function renderWeek() {
-    const dates = weekDates(S.sel); const t = todayStr();
-    $('#wkTitle').textContent = `第 ${+isoWeekId(S.sel).split('-W')[1]} 周 · ${dates[0].slice(5).replace('-', '/')}–${dates[6].slice(5).replace('-', '/')}`;
-    let h = `<thead><tr><th></th>${dates.map((d, i) => `<th class="${d === t ? 'today' : ''}">${WD[i].slice(1)}</th>`).join('')}<th style="text-align:right">完成</th></tr></thead><tbody>`;
-    const done = (cnt, goal) => `<td class="cnt">${cnt}/${goal}${goal && cnt >= goal ? '<span class="st">达成</span>' : ''}</td>`;
-    h += CHECKS.map(c => `<tr class="cat-${c.c}"><td class="nm">${c.n}</td>${dates.map(d => c.derived
-        ? `<td><span class="cell ${isChecked(d, c.k) ? 'f' : ''}" title="${isChecked(d, c.k) ? '第二天的 Top 3 已写' : '第二天的 Top 3 没写'}"></span></td>`
-        : `<td><button class="cell ${isChecked(d, c.k) ? 'f' : ''}" data-cell="${c.k}" data-date="${d}" aria-label="${c.n} ${d}"></button></td>`).join('')}${done(weekCount(S.sel, c.k), +S.settings.goals[c.k] || 0)}</tr>`).join('');
-    h += `<tr class="cat-sport"><td class="nm">健身</td>${dates.map(d => { const ps = getDay(d).gym; return `<td>${ps.length ? `<span class="gcell" title="${partNames(ps)}">${GYM_PARTS.filter(g => ps.includes(g.k)).map(g => g.n.slice(0, 1)).join('')}</span>` : '<span class="cell"></span>'}</td>`; }).join('')}${done(weekCount(S.sel, 'gym'), +S.settings.goals.gym || 0)}</tr>`;
-    h += `<tr class="cat-fun"><td class="nm">🏓 Pickleball</td>${dates.map(d => `<td><button class="cell ${isChecked(d, 'pickleball') ? 'f' : ''}" data-cell="pickleball" data-date="${d}" aria-label="Pickleball ${d}"></button></td>`).join('')}<td class="cnt">${weekCount(S.sel, 'pickleball')} 次</td></tr>`;
-    $('#wkTable').innerHTML = h + '</tbody>';
-    const inWeek = s => s && s >= dates[0] && s <= dates[6];
-    $('#wkKpis').innerHTML = [
-      ['新投递', S.jobs.filter(j => inWeek(j.applied_at)).length], ['笔试 / 面试中', S.jobs.filter(j => ['oa', 'interview'].includes(j.status)).length],
-      S.schools.length ? ['已提交学校', `${S.schools.filter(s => (s.materials || {}).submitted).length}/${S.schools.length}`]
-        : ['完成待办', S.doneTodos.filter(t => inWeek((t.doneAt || '').slice(0, 10))).length + S.todos.reduce((a, t) => a + (t.doneLog || []).filter(inWeek).length, 0)],
-      ['本周花费', money(allSpend().filter(e => inWeek(e.date)).reduce((a, e) => a + (+e.amount || 0), 0))],
-    ].map(([k, v]) => `<div class="kpi"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
-    const sl = dates.map(d => sleepOf(getDay(d))).filter(Boolean).map(s => s.mins);
-    const wo = dates.reduce((a, d) => a + ((getDay(d).auto || {}).workouts || []).reduce((x, w) => x + (+w.mins || 0), 0), 0);
-    const pDays = dates.filter(d => foodTotals(getDay(d)).p > 0);
-    $('#wkBody').innerHTML = [
-      ['平均睡眠', sl.length ? fmtDur(Math.round(sl.reduce((a, b) => a + b, 0) / sl.length)) + sleepBars(dates) : '—'], ['入睡规律', bedSpread(dates)], ['健身', `${weekCount(S.sel, 'gym')}/${+S.settings.goals.gym || 0} 次`],
-      ['完成循环', `${gymCycles().done.length} 轮`],
-      ['日均蛋白质', pDays.length ? Math.round(pDays.reduce((a, d) => a + foodTotals(getDay(d)).p, 0) / pDays.length) + ' g' : '—'],
-    ].map(([k, v]) => `<div class="kpi"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
-    const r = S.reviews[isoWeekId(S.sel)] || {};
-    setVal('revGood', r.good); setVal('revAdjust', r.adjust); setVal('revNext', r.next);
-    $('#revSaved').textContent = r.savedAt ? `已保存 · ${r.savedAt}` : '';
-  }
-
   function renderSchools() {
     const t = todayStr();
     const list = [...S.schools].sort((a, b) => (((a.materials || {}).submitted ? 1 : 0) - ((b.materials || {}).submitted ? 1 : 0)) || (a.deadline || '9999').localeCompare(b.deadline || '9999'));
@@ -2298,20 +2455,20 @@ Google 日历本周已有：${Object.entries(S.cal).flatMap(([d, l]) => l.filter
     return m.replace(/[^a-z\u4e00-\u9fff&' ]+/g, ' ').replace(/\s+/g, ' ').trim().split(' ').slice(0, 3).join(' ');
   };
   const realExp = mo => monthExpenses(mo).filter(e => !e.ignored && (+e.amount || 0) !== 0);
-  const variableTotal = mo => realExp(mo).filter(e => e.cat !== 'fixed').reduce((a, e) => a + (+e.amount || 0), 0);
+  const variableTotal = mo => realExp(mo).filter(e => !isFixed(e)).reduce((a, e) => a + (+e.amount || 0), 0);
   const allSpend = () => { const ids = new Set(); return [...S.allExp, ...S.bofa, ...S.expenses].filter(e => !e.ignored && e.month && !ids.has(e.id) && ids.add(e.id)); };
   // Subscriptions: same merchant charged in 2+ different months of the last 6, at a steady amount (within 20% of the median).
   // Only subscriptions still alive in month `mo`: charged in `mo` or the month before (no charge last month = probably cancelled).
   function detectSubs(mo = finMo()) {
     const since = addMonths(mo, -5); const by = {};
-    allSpend().filter(e => e.month >= since && e.month <= mo && e.cat !== 'fixed' && !String(e.merchant || '').startsWith('Zelle')).forEach(e => { const k = merKey(e); if (k) (by[k] = by[k] || []).push(e); });
+    allSpend().filter(e => e.month >= since && e.month <= mo && !isFixed(e) && !String(e.merchant || '').startsWith('Zelle')).forEach(e => { const k = merKey(e); if (k) (by[k] = by[k] || []).push(e); });
     const hidden = new Set(S.settings.notSubs || []);
     return Object.entries(by).map(([k, xs]) => {
       const months = new Set(xs.map(x => x.month)); const amts = xs.map(x => +x.amount).sort((a, b) => a - b); const med = amts[Math.floor(amts.length / 2)];
       const steady = xs.filter(x => Math.abs(+x.amount - med) <= Math.max(1, med * .2)).length / xs.length;
       const last = xs.map(x => x.date).sort().pop();
       return { k, name: xs[xs.length - 1].merchant || k, n: months.size, med, steady, last, cat: xs[xs.length - 1].cat, perMo: xs.length / months.size };
-    }).filter(x => x.last.slice(0, 7) >= addMonths(mo, -1) && x.n >= (['other', 'fun', 'sport'].includes(x.cat) ? 2 : 3) && x.steady >= .7 && x.perMo <= 1.5 && x.med < 400 && !hidden.has(x.k)).sort((a, b) => b.med - a.med);
+    }).filter(x => x.last.slice(0, 7) >= addMonths(mo, -1) && x.n >= (['other', 'fun', 'personal', 'growth', 'utilities'].includes(x.cat) ? 2 : 3) && x.steady >= .7 && x.perMo <= 1.5 && x.med < 400 && !hidden.has(x.k)).sort((a, b) => b.med - a.med);
   }
   const catBudget = k => +((S.settings.catBudgets || {})[k]) || 0;
   // Income: deposits Izzy actually received (family wires, photography, cashback). Friends paying back their share (AA) are not income: they sit in expenses as negative amounts in the category they offset.
@@ -2338,10 +2495,10 @@ Google 日历本周已有：${Object.entries(S.cal).flatMap(([d, l]) => l.filter
   }
   function finBars(mo) {
     // Selected month sits in the middle (3 before, 3 after); months after this one are empty placeholders.
-    const months = [-3, -2, -1, 0, 1, 2, 3].map(i => addMonths(mo, i)); const cats = EXP_CATS.filter(c => c.k !== 'fixed').map(c => c.k).concat('pending'); const nowMo = monthOf(todayStr());
-    const data = months.map(m => { const v = {}; realExp(m).forEach(e => { if (e.cat === 'fixed') return; const k = e.cat && cats.includes(e.cat) ? e.cat : 'pending'; v[k] = (v[k] || 0) + (+e.amount || 0); }); v.fixed = fixedPaid(m); v.expected = expectedTotal(m); return { m, v, future: m > nowMo, total: Object.values(v).reduce((a, b) => a + b, 0) }; });
+    const months = [-3, -2, -1, 0, 1, 2, 3].map(i => addMonths(mo, i)); const cats = EXP_CATS.filter(c => c.k !== 'housing').map(c => c.k).concat('pending'); const nowMo = monthOf(todayStr());
+    const data = months.map(m => { const v = {}; realExp(m).forEach(e => { if (isFixed(e)) return; const k = e.cat && cats.includes(e.cat) ? e.cat : 'pending'; v[k] = (v[k] || 0) + (+e.amount || 0); }); v.fixed = fixedPaid(m); v.expected = expectedTotal(m); return { m, v, future: m > nowMo, total: Object.values(v).reduce((a, b) => a + b, 0) }; });
     const max = Math.max(1, ...data.map(d => d.total)); const W = Math.max(300, Math.min(760, $('#finTrend').clientWidth || 560)), H = W < 420 ? 170 : 190, pb = 22, pt = 16, bw = Math.min(52, W / 7 * .6), gap = (W - bw * 7) / 7;
-    const col = { food: 'var(--c-fun)', transport: 'var(--c-work)', fun: 'var(--c-job)', sport: 'var(--c-sport)', shop: 'var(--c-learn)', other: 'var(--c-life)', pending: 'var(--line)', fixed: 'var(--c-grad)', expected: 'color-mix(in srgb, var(--c-grad) 25%, transparent)' };
+    const col = { food: 'var(--c-fun)', transport: 'var(--c-work)', utilities: 'var(--c-cal)', health: 'var(--coral)', personal: 'var(--c-learn)', fun: 'var(--c-job)', growth: 'var(--c-sport)', finance: 'var(--orange)', other: 'var(--c-life)', pending: 'var(--line)', fixed: 'var(--c-grad)', expected: 'color-mix(in srgb, var(--c-grad) 25%, transparent)' };
     let svg = `<svg class="chart fin-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="月度花费趋势">`;
     const avg = data.filter(d => d.m < mo && d.total > 0).map(d => d.total); const av = avg.length ? avg.reduce((a, b) => a + b, 0) / avg.length : 0;
     data.forEach((d, i) => {
@@ -2353,7 +2510,7 @@ Google 日历本周已有：${Object.entries(S.cal).flatMap(([d, l]) => l.filter
     });
     if (av) svg += `<line x1="0" x2="${W}" y1="${H - pb - av / max * (H - pb - pt)}" y2="${H - pb - av / max * (H - pb - pt)}" stroke="var(--muted)" stroke-dasharray="4 4"/><text x="2" y="${H - pb - av / max * (H - pb - pt) - 4}" text-anchor="start">月均 ${money(Math.round(av))}</text>`;
     $('#finTrend').innerHTML = svg + '</svg>';
-    $('#finLegend').innerHTML = [['fixed', '固定支出'], ['expected', '预计固定'], ...EXP_CATS.filter(c => c.k !== 'fixed').map(c => [c.k, c.n]), ['pending', '待分类']].map(([k, n]) => `<span><i style="background:${col[k]}"></i>${n}</span>`).join('');
+    $('#finLegend').innerHTML = [['fixed', '固定支出'], ['expected', '预计固定'], ...EXP_CATS.filter(c => c.k !== 'housing').map(c => [c.k, c.n]), ['pending', '待分类']].map(([k, n]) => `<span><i style="background:${col[k]}"></i>${n}</span>`).join('');
     return { data, av };
   }
   function finTxRow(e) {
@@ -2377,7 +2534,7 @@ Google 日历本周已有：${Object.entries(S.cal).flatMap(([d, l]) => l.filter
   function renderFinance() {
     const mo = finMo(); const cur = mo === monthOf(todayStr()); const prev = addMonths(mo, -1);
     $('#finMonth').textContent = `${mo.slice(0, 4)} 年 ${+mo.slice(5)} 月`;
-    const ex = realExp(mo).filter(e => e.cat !== 'fixed'); const varT = variableTotal(mo); const fp = fixedPaid(mo); const expd = expectedTotal(mo); const rec = recurringTotal(); const tot = varT + fp + expd; const prevT = variableTotal(prev) + fixedPaid(prev);
+    const ex = realExp(mo).filter(e => !isFixed(e)); const varT = variableTotal(mo); const fp = fixedPaid(mo); const expd = expectedTotal(mo); const rec = recurringTotal(); const tot = varT + fp + expd; const prevT = variableTotal(prev) + fixedPaid(prev);
     const dim = new Date(+mo.slice(0, 4), +mo.slice(5), 0).getDate(); const dayN = cur ? new Date().getDate() : dim;
     const b = +S.settings.budget; const inc = incomeTotal(mo); const aa = aaTotal(mo);
     const delta = prevT > 0 ? (tot - prevT) / prevT * 100 : null;
@@ -2390,10 +2547,17 @@ Google 日历本周已有：${Object.entries(S.cal).flatMap(([d, l]) => l.filter
       + kpi(cur ? '本月入账' : `${+mo.slice(5)} 月入账`, money(Math.round(inc)), inc ? `${Object.entries(monthIncome(mo).reduce((o, x) => (o[x.kind] = (o[x.kind] || 0) + (+x.amount || 0), o), {})).map(([k, v]) => `${incName(k)} ${money(Math.round(v))}`).join(' · ')} · 结余 ${money(Math.round(inc - tot))}` : '这个月没有入账', inc && inc - tot < 0 ? 'bad' : '')
       + (aa ? kpi('朋友 AA 抵扣', money(Math.round(aa * 100) / 100), `已从日常开销里扣掉 · ${realExp(mo).filter(e => e.kind === 'aa').length} 笔`) : ''));
     finBars(mo); $('#finTrendMo').textContent = `${+mo.slice(5)} 月`;
+    // Spending by nature (all real spending this month, fixed costs included; friends' paybacks already netted out)
+    { const NC = { rigid: 'var(--c-work)', flex: 'var(--c-fun)', future: 'var(--c-sport)', pend: 'var(--line)' }; const by = { rigid: 0, flex: 0, future: 0, pend: 0 }; const cats = { rigid: {}, flex: {}, future: {} };
+      realExp(mo).forEach(e => { const n = natOf(e.cat) || 'pend'; by[n] += +e.amount || 0; if (cats[n]) cats[n][e.cat] = (cats[n][e.cat] || 0) + (+e.amount || 0); });
+      const all = Math.max(0, by.rigid) + Math.max(0, by.flex) + Math.max(0, by.future) + Math.max(0, by.pend);
+      setFin('#finNature', all ? `<div class="fnat-bar">${['rigid', 'flex', 'future', 'pend'].map(n => by[n] > 0 ? `<i style="width:${by[n] / all * 100}%;background:${NC[n]}" title="${n === 'pend' ? '待分类' : NATURES.find(x => x.k === n).n} ${money(Math.round(by[n]))}"></i>` : '').join('')}</div>`
+        + NATURES.map(x => `<div class="fnat-r"><i style="background:${NC[x.k]}"></i><span>${x.n} <b>${Math.round(Math.max(0, by[x.k]) / all * 100)}%</b></span><b>${money(Math.round(by[x.k]))}</b><small>${Object.entries(cats[x.k]).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${expName(k)} ${money(Math.round(v))}`).join(' · ') || x.d}</small></div>`).join('')
+        + (by.pend > 0 ? `<div class="fbud-s">另有待分类 ${money(Math.round(by.pend))}，分好类后会算进来。</div>` : '') : '<div class="empty">这个月还没有支出。</div>'); }
     // Category budgets
     const byCat = {}; ex.forEach(e => { const k = e.cat || 'pending'; byCat[k] = (byCat[k] || 0) + (+e.amount || 0); });
     const hist = k => { const ms = [1, 2, 3].map(i => addMonths(mo, -i)).map(m => realExp(m).filter(e => e.cat === k).reduce((a, e) => a + (+e.amount || 0), 0)).filter(v => v > 0); return ms.length ? ms.reduce((a, b) => a + b, 0) / ms.length : 0; };
-    setFin('#finBudgets', EXP_CATS.filter(c => c.k !== 'fixed').map(c => {
+    setFin('#finBudgets', EXP_CATS.filter(c => c.k !== 'housing').map(c => {
       const sp = byCat[c.k] || 0; const bg = catBudget(c.k); const pace = bg ? bg * dayN / dim : 0; const h3 = hist(c.k);
       const cls = !bg ? '' : sp > bg ? 'over' : cur && sp > pace * 1.1 ? 'warn' : 'ok';
       return `<div class="fbud ${cls}"><div class="fbud-h"><span class="nm">${c.n}</span><span class="num">${money(Math.round(sp))} / ${finEd('cat:' + c.k, '设预算', bg)}</span></div>
@@ -2450,7 +2614,7 @@ Google 日历本周已有：${Object.entries(S.cal).flatMap(([d, l]) => l.filter
   }
   async function finAnalyze(mo = finMo(), auto = false) {
     if (!S.sample || S.finBusy) return; S.finBusy = true; $('#finAIRun').disabled = true; if (mo === finMo()) $('#finInsight').innerHTML = `<div class="empty">Claude 在看${auto ? `上个月（${+mo.slice(5)} 月）的` : ''}账…</div>`;
-    const line = m => { const by = {}; realExp(m).filter(e => e.cat !== 'fixed').forEach(e => { const k = e.cat ? expName(e.cat) : '待分类'; by[k] = (by[k] || 0) + (+e.amount || 0); }); return `${m}：固定 ${Math.round(fixedPaid(m))}，日常 ${Math.round(variableTotal(m))}（${Object.entries(by).map(([k, v]) => `${k} ${Math.round(v)}`).join('、') || '无'}）`; };
+    const line = m => { const by = {}; realExp(m).filter(e => !isFixed(e)).forEach(e => { const k = e.cat ? expName(e.cat) : '待分类'; by[k] = (by[k] || 0) + (+e.amount || 0); }); return `${m}：固定 ${Math.round(fixedPaid(m))}，日常 ${Math.round(variableTotal(m))}（${Object.entries(by).map(([k, v]) => `${k} ${Math.round(v)}`).join('、') || '无'}）`; };
     const tm = {}; realExp(mo).forEach(e => { const k = e.merchant || e.note || '其他'; tm[k] = (tm[k] || 0) + (+e.amount || 0); });
     const subs = detectSubs(mo);
     try {
@@ -2484,8 +2648,8 @@ ${mo === monthOf(todayStr()) ? `今天是本月第 ${new Date().getDate()} 天�
       const r = await S.sample.json(`把这些银行交易分到类别里。类别只能是：food（餐饮、外卖、超市、奶茶）、transport（油费、停车、地铁、修车、DMV）、fun（旅行、酒店、机票、演出、游戏、娱乐订阅）、sport（健身房、球类、运动用品）、shop（购物、电子产品、礼物、衣服）、other（话费、软件订阅、手续费、其他）。Zelle 转给个人的，看备注判断；没备注又猜不出的给 "" 。
 id | 商家 | 备注 | 金额
 ${pend.map(e => `${e.id} | ${e.merchant || ''} | ${e.note || ''} | ${e.amount}`).join('\n')}
-只输出 JSON：{"items":[{"id":"…","cat":"food|transport|fun|sport|shop|other|"}]}`, { modelTier: 'quick' });
-      const ok = (r && r.items || []).filter(x => pend.some(e => e.id === x.id) && EXP_CATS.some(c => c.k === x.cat && c.k !== 'fixed'));
+只输出 JSON：{"items":[{"id":"…","cat":"${CAT_KEYS}|"}]}`, { modelTier: 'quick' });
+      const ok = (r && r.items || []).filter(x => pend.some(e => e.id === x.id) && EXP_CATS.some(c => c.k === x.cat));
       const prev = ok.map(x => x.id);
       for (const x of ok) { const e = pend.find(y => y.id === x.id); e.cat = x.cat; e.catBy = 'ai'; await write(db => db.doc('expenses/' + x.id).update({ cat: x.cat, catBy: 'ai' })); }
       // Remember what Claude could not place, so the automatic pass does not ask about it again.
@@ -2822,7 +2986,7 @@ ${pend.map(e => `${e.id} | ${e.merchant || ''} | ${e.note || ''} | ${e.amount}`)
   $('#prev').onclick = () => { S.sel = addDays(S.sel, S.tab === 'week' ? -7 : -1); onSelChange(); };
   $('#next').onclick = () => { S.sel = addDays(S.sel, S.tab === 'week' ? 7 : 1); onSelChange(); };
   $('#goToday').onclick = () => { S.sel = todayStr(); onSelChange(); };
-  function onSelChange() { $('#schedEdit').hidden = true; $('#timeline').hidden = false; subscribeMonth(); render(); }
+  function onSelChange() { closeTlPop(true); subscribeMonth(); render(); }
   // Sleep card: edit a session's times in place, delete one, or add a missed one.
   document.addEventListener('change', async e => {
     const f = e.target; if (!f.matches('[data-slp-edit]')) return;
@@ -2840,12 +3004,9 @@ ${pend.map(e => `${e.id} | ${e.merchant || ''} | ${e.note || ''} | ${e.amount}`)
     const id = 'sl' + Date.now().toString(36);
     if (await write(db => db.doc('sleeps/' + id).set({ bed: bed.toISOString(), wake: wake.toISOString(), src: 'manual' }))) { document.activeElement.blur(); toast(`补记 ${b} → ${w}`, () => write(db => db.doc('sleeps/' + id).delete())); }
   });
-  $('#editSched').onclick = () => { $('#schedText').value = schedText(S.sel); $('#schedEdit').hidden = false; $('#timeline').hidden = true; $('#schedText').focus(); };
-  $('#schedCancel').onclick = () => { $('#schedEdit').hidden = true; $('#timeline').hidden = false; };
-  $('#schedSave').onclick = () => { const v = $('#schedText').value; $('#schedEdit').hidden = true; $('#timeline').hidden = false; saveDay(S.sel, d => { d.override = v; }); toast('已保存这一天的安排'); };
-  $('#schedReset').onclick = () => { $('#schedEdit').hidden = true; $('#timeline').hidden = false; saveDay(S.sel, d => { d.override = null; }); toast('已恢复周模板'); };
+  $('#schedReset').onclick = () => { const date = S.sel, prev = getDay(date).override ?? null; saveDay(date, d => { d.override = null; }); toast('已恢复周模板', () => saveDay(date, d => { d.override = prev; })); };
   $('#wForm').addEventListener('submit', e => { e.preventDefault(); const v = parseFloat($('#wVal').value); saveDay(S.sel, d => { d.weight = isNaN(v) ? null : v; }); toast(isNaN(v) ? '已清除体重' : '已记录体重'); $('#wVal').blur(); });
-  $('#rCat').innerHTML = EXP_CATS.map(c => `<option value="${c.k}" ${c.k === 'fixed' ? 'selected' : ''}>${c.n}</option>`).join('');
+  $('#rCat').innerHTML = EXP_CATS.map(c => `<option value="${c.k}" ${c.k === 'housing' ? 'selected' : ''}>${c.n}</option>`).join('');
   document.addEventListener('submit', async e => {
     if (e.target.id !== 'shakeForm') return; e.preventDefault();
     const shake = { p: Math.max(0, +$('#shakeP').value || 0), k: Math.max(0, +$('#shakeK').value || 0) };
@@ -2863,32 +3024,6 @@ ${pend.map(e => `${e.id} | ${e.merchant || ''} | ${e.note || ''} | ${e.amount}`)
   $('#goalForm').addEventListener('submit', async e => { e.preventDefault(); const name = $('#gName').value.trim(), target = parseFloat($('#gAmt').value); if (!name || !target) return toast('填上目标名称和金额');
     if (await write(db => db.collection('savgoals').add({ name: name.slice(0, 40), target: Math.round(target), saved: 0, date: $('#gDate').value || null, createdAt: new Date().toISOString() }))) { $('#gName').value = $('#gAmt').value = $('#gDate').value = ''; toast('已添加储蓄目标'); } });
   $('#recForm').addEventListener('submit', async e => { e.preventDefault(); const name = $('#rName').value.trim(), amt = parseFloat($('#rAmt').value); if (!name || !amt) return; const day = parseInt($('#rDay').value, 10); if (await write(db => db.collection('recurring').add({ name, amount: Math.round(amt * 100) / 100, cat: $('#rCat').value, ...(day >= 1 && day <= 31 ? { day } : {}) }))) { $('#rName').value = $('#rAmt').value = $('#rDay').value = ''; toast('已添加固定支出'); } });
-  // Claude drafts the review from this week's numbers; nothing is saved until 保存复盘.
-  $('#revDraft').onclick = async () => {
-    if (!S.sample) { toast('Claude 不可用'); return; }
-    const dates = weekDates(S.sel); const inW = d => d && d >= dates[0] && d <= dates[6]; const btn = $('#revDraft');
-    const done = S.doneTodos.filter(t => inW((t.doneAt || '').slice(0, 10))).map(t => t.text);
-    const open = S.todos.filter(t => !isSleeping(t)).map(t => `${t.text}${t.due ? `（${t.due}）` : ''}`);
-    const gym = dates.map(d => getDay(d).gym).filter(g => g.length).map(partNames);
-    const facts = [`阅读 ${weekCount(S.sel, 'reading')}/7 天`, `做计划 ${weekCount(S.sel, 'plan')}/7 天`, `健身 ${weekCount(S.sel, 'gym')}/${+S.settings.goals.gym || 0} 次：${gym.join('、') || '无'}`,
-      `Pickleball ${weekCount(S.sel, 'pickleball')} 次`, `本周投递 ${S.jobs.filter(j => inW(j.applied_at)).length} 个，面试/笔试中 ${S.jobs.filter(j => ['oa', 'interview'].includes(j.status)).length} 个`,
-      `完成的待办：${done.join('；') || '无'}`, `还没完成的待办：${open.join('；') || '无'}`,
-      `本周花费 ${money(allSpend().filter(e => inW(e.date)).reduce((a, e) => a + (+e.amount || 0), 0))}`,
-      `日均蛋白 ${(() => { const pd = dates.filter(d => foodTotals(getDay(d)).p > 0); return pd.length ? Math.round(pd.reduce((a, d) => a + foodTotals(getDay(d)).p, 0) / pd.length) + 'g' : '没记'; })()}`];
-    btn.disabled = true; btn.textContent = 'Claude 在写…';
-    try {
-      const r = await S.sample.json(`根据 Izzy 这一周（${dates[0]} 到 ${dates[6]}）的数据写每周复盘草稿，中文，具体、不客套、不编造数据里没有的事，每部分 2–4 条短句，用「- 」开头分行。
-${facts.join('\n')}
-只输出 JSON：{"good":"这周做得好的","adjust":"需要调整的","next":"下周重点（具体到事）"}`);
-      if (r) { ['good', 'adjust', 'next'].forEach(k => { const el = $('#rev' + k[0].toUpperCase() + k.slice(1)); if (r[k] && !el.value.trim()) el.value = String(r[k]); else if (r[k]) el.value += '\n' + String(r[k]); }); toast('草稿写好了，改完点「保存复盘」'); }
-    } catch (e) { toast('Claude 没写出来，稍后再试'); }
-    btn.disabled = false; btn.textContent = '让 Claude 起草';
-  };
-  $('#revSave').onclick = async () => {
-    const wid = isoWeekId(S.sel); const now = new Date();
-    const body = { week: wid, good: $('#revGood').value, adjust: $('#revAdjust').value, next: $('#revNext').value, counts: Object.fromEntries([...CHECKS.map(c => c.k), 'gym'].map(k => [k, weekCount(S.sel, k)])), savedAt: `${now.getMonth() + 1}/${now.getDate()} ${pad(now.getHours())}:${pad(now.getMinutes())}` };
-    S.reviews[wid] = body; renderWeek(); if (await write(db => db.doc('reviews/' + wid).set(body))) toast('复盘已保存');
-  };
   $('#syncNow').onclick = () => S.mcp ? syncGmail(true) : toast('在 claude.ai 里打开这个页面才能同步');
 
   // sheets
@@ -2950,7 +3085,7 @@ ${facts.join('\n')}
   function subscribeMonth() {
     if (!S.db) return; const mo = monthOf(S.sel); if (mo === subMonthKey) return;
     if (unsubMonth) unsubMonth(); subMonthKey = mo; S.expenses = [];
-    unsubMonth = S.db.collection('expenses').where('month', '==', mo).onSnapshot(snap => { S.expenses = snap.docs.map(d => ({ id: d.id, ...d.data() })); render(); }, onSubErr);
+    unsubMonth = S.db.collection('expenses').where('month', '==', mo).onSnapshot(snap => { S.expenses = snap.docs.map(d => normCat({ id: d.id, ...d.data() })); render(); }, onSubErr);
   }
   function onSubErr(e) { if (e && e.code === 'revoked') showBanner('数据连接已断开，请刷新页面。'); else if (e && e.code === 'unavailable') showBanner('数据连接中断，请刷新页面。'); else console.warn('db', e); }
 
@@ -2963,9 +3098,9 @@ ${facts.join('\n')}
     db.collection('days').orderBy('date', 'desc').limit(400).onSnapshot(snap => {
       const next = {}; snap.docs.forEach(d => { next[d.id] = d.data(); }); Object.keys(dirty).forEach(k => { if (S.days[k]) next[k] = S.days[k]; }); S.days = next; render();
     }, onSubErr);
-    db.collection('expenses').where('src', '==', 'bofa').onSnapshot(snap => { S.bofa = snap.docs.map(d => ({ id: d.id, ...d.data() })); render(); applyMerRules(); }, onSubErr);
+    db.collection('expenses').where('src', '==', 'bofa').onSnapshot(snap => { S.bofa = snap.docs.map(d => normCat({ id: d.id, ...d.data() })); render(); applyMerRules(); }, onSubErr);
     db.collection('income').onSnapshot(snap => { S.income = snap.docs.map(d => ({ id: d.id, ...d.data() })); render(); }, onSubErr);
-    db.collection('expenses').onSnapshot(snap => { S.allExp = snap.docs.map(d => ({ id: d.id, ...d.data() })); render(); applyMerRules(); }, onSubErr);
+    db.collection('expenses').onSnapshot(snap => { S.allExp = snap.docs.map(d => normCat({ id: d.id, ...d.data() })); render(); applyMerRules(); }, onSubErr);
     db.collection('savgoals').onSnapshot(snap => { S.savgoals = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => String(a.date || '9').localeCompare(String(b.date || '9'))); renderFinance(); }, onSubErr);
     db.collection('insights').onSnapshot(snap => { S.insights = Object.fromEntries(snap.docs.map(d => [d.id, d.data()])); renderFinance(); }, onSubErr);
     db.collection('jobs').onSnapshot(snap => { S.jobs = snap.docs.map(d => ({ id: d.id, ...d.data() })); render(); }, onSubErr);
@@ -2975,8 +3110,8 @@ ${facts.join('\n')}
     db.collection('sleeps').orderBy('bed', 'desc').limit(120).onSnapshot(snap => { S.sleeps = snap.docs.map(d => ({ id: d.id, ...d.data() })); render(); }, onSubErr);
     db.doc('prefs/ui').onSnapshot(snap => { S.prefs = snap.exists ? snap.data() : {}; render(); }, onSubErr);
     db.collection('schools').onSnapshot(snap => { S.schools = snap.docs.map(d => ({ id: d.id, ...d.data() })); render(); }, onSubErr);
-    db.collection('recurring').onSnapshot(snap => { S.recurring = snap.docs.map(d => ({ id: d.id, ...d.data() })); render(); }, onSubErr);
-    db.collection('reviews').onSnapshot(snap => { S.reviews = Object.fromEntries(snap.docs.map(d => [d.id, d.data()])); renderWeek(); }, onSubErr);
+    db.collection('recurring').onSnapshot(snap => { S.recurring = snap.docs.map(d => normCat({ id: d.id, ...d.data() })); render(); }, onSubErr);
+    db.collection('reviews').onSnapshot(snap => { S.reviews = Object.fromEntries(snap.docs.map(d => [d.id, d.data()])); }, onSubErr);
     db.collection('sync').onSnapshot(snap => { S.syncDocs = Object.fromEntries(snap.docs.map(d => [d.id, d.data()])); render(); }, onSubErr);
     subscribeMonth();
     try { S.sample = await window.claude.use('sample'); } catch { S.sample = null; }
@@ -3006,5 +3141,6 @@ ${facts.join('\n')}
   connect();
 })();
 </script>
+
 </body>
 </html>
