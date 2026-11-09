@@ -294,7 +294,7 @@ textarea.field { width: 100%; resize: vertical; min-height: 64px; line-height: 1
 /* auto tiles */
 .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .tile { border: 0; text-align: left; border-radius: 18px; padding: 12px 14px; display: grid; gap: 1px; min-width: 0; color: var(--ink); }
-.tiles .tile:nth-child(1) { background: var(--lav); } .tiles .tile:nth-child(2) { background: var(--mint); } .tiles .tile:nth-child(3) { background: var(--peach); } .tiles .tile:nth-child(4) { background: var(--pink); }
+.tiles .tile:nth-child(1) { background: var(--lav); } .tiles .tile:nth-child(2) { background: var(--mint); } .tiles .tile:nth-child(3) { background: var(--peach); } .tiles .tile:nth-child(4) { background: var(--pink); } .tiles .tile:nth-child(5) { background: var(--butter); }
 .tile .k { font-size: 12px; font-weight: 800; display: flex; justify-content: space-between; gap: 6px; }
 .tile .k span:last-child { font-weight: 700; color: var(--muted); }
 .tile .v { font-family: var(--f-display); font-weight: 600; font-size: 22px; line-height: 1.2; font-variant-numeric: tabular-nums; }
@@ -413,7 +413,7 @@ textarea.field { width: 100%; resize: vertical; min-height: 64px; line-height: 1
 .today .t-stats { padding: 14px 16px; }
 .dstats { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
 .dstats .tile { flex: 1 1 0; display: flex; align-items: baseline; gap: 8px; padding: 7px 14px; border-radius: 99px; min-width: 140px; }
-.dstats .tile:nth-child(1) { background: var(--lav); } .dstats .tile:nth-child(2) { background: var(--mint); } .dstats .tile:nth-child(3) { background: var(--peach); } .dstats .tile:nth-child(4) { background: var(--pink); }
+.dstats .tile:nth-child(1) { background: var(--lav); } .dstats .tile:nth-child(2) { background: var(--mint); } .dstats .tile:nth-child(3) { background: var(--peach); } .dstats .tile:nth-child(4) { background: var(--pink); } .dstats .tile:nth-child(5) { background: var(--butter); }
 .dstats .tile .k { min-width: 0; font-size: 12px; white-space: nowrap; }
 .dstats .tile .v { font-size: 15px; white-space: nowrap; } .dstats .tile .s { display: none; }
 .gym-h .lights.sm { margin-left: auto; } .lights em { font-style: normal; font-size: 11px; font-weight: 800; color: var(--muted); align-self: center; margin-right: 2px; } .gym-h .lights.sm + .wk { margin-left: 4px; }
@@ -694,6 +694,7 @@ pre.fmt { margin: 0; background: var(--sunk); border-radius: 14px; padding: 12px
 .t-side .dstats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 0; }
 .t-side .dstats .tile { min-width: 0; flex-direction: column; align-items: flex-start; gap: 2px; border-radius: 14px; padding: 8px 12px; }
 .t-side .dstats .tile .k { white-space: nowrap; } .t-side .dstats .tile .v { font-size: 17px; max-width: 100%; }
+.t-side .dstats .tile:nth-child(5) { grid-column: 1 / -1; }
 .t-side .t-stats { padding: 14px 16px; } .t-side .t-stats .card-h { margin-bottom: 8px; }
 @media (min-width: 1100px) {
   .today.on { grid-template-columns: minmax(300px, .95fr) minmax(0, 1.3fr) minmax(280px, .8fr); grid-template-rows: auto minmax(0, 1fr);
@@ -1639,6 +1640,13 @@ end</pre>
         return `<button class="tile" title="${next ? `最近截止：${esc(next.text)} ${next.due}` : ''}"><span class="k"><span>待办</span></span><span class="v">${open.length} 件${urg ? `<i> · 紧急 ${urg}</i>` : ''}${od ? `<i style="color:var(--bad)"> · 过期 ${od}</i>` : ''}</span></button>`; })(),
       (() => { const fixed = fixedPaid(mo) + expectedTotal(mo); const daily = mt - fixed; return `<button class="tile" data-go="money" title="含固定支出共 ${money(mt)}"><span class="k"><span>${+mo.slice(5)} 月日常</span></span><span class="v" ${b && mt > b ? 'style="color:var(--bad)"' : ''}>${money(daily)}${fixed ? `<i> + 固定 ${money(fixed)}</i>` : ''}</span></button>`; })(),
       `<button class="tile" data-go="food"><span class="k"><span>今天蛋白</span></span><span class="v">${Math.round(f.p)}${pt ? `<i> / ${pt}</i>` : proteinSuggest() ? `<i> / 建议 ${proteinSuggest()}</i>` : ''} g</span></button>`,
+      // B 站：一天 = 当天 6:00 到次日 6:00；优先显示所选日期的前一天，没有就显示最新一天
+      (() => { const bd = (S.syncDocs.bili || {}).days || {}; const y = addDays(S.sel, -1); const d = bd[y] ? y : Object.keys(bd).sort().pop();
+        if (!d) return `<button class="tile"><span class="k"><span>B 站 · 昨天</span></span><span class="v">等待同步</span></button>`;
+        const x = bd[d]; const hm = m => { m = Math.round(+m || 0); return m >= 60 ? `${Math.floor(m / 60)} 小时 ${m % 60} 分` : `${m} 分`; };
+        const wk = [0, 1, 2, 3, 4, 5, 6].map(i => bd[addDays(d, -i)]).filter(Boolean); const avg = wk.length ? Math.round(wk.reduce((a, v) => a + (+v.min || 0), 0) / wk.length) : null;
+        const tip = `${d} 共 ${+x.n || 0} 条${(x.top || []).length ? ' · 最长：' + x.top.slice(0, 3).map(v => `${v.title}（${hm(v.min)}）`).join('、') : ''}`;
+        return `<button class="tile" title="${esc(tip)}"><span class="k"><span>B 站 · ${d === y ? '昨天' : `${+d.slice(5, 7)}/${+d.slice(8)}`}</span></span><span class="v">${hm(x.min)}${avg != null ? `<i> · 7 天均 ${avg} 分</i>` : ''}</span></button>`; })(),
     ].join('');
   }
 
@@ -3147,6 +3155,5 @@ ${pend.map(e => `${e.id} | ${e.merchant || ''} | ${e.note || ''} | ${e.amount}`)
   connect();
 })();
 </script>
-
 </body>
 </html>
