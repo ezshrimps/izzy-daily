@@ -2259,7 +2259,7 @@ Google 日历本周已有：${Object.entries(S.cal).flatMap(([d, l]) => l.filter
     $('#qNow').textContent = cur ? `现在：${cur.w}` : '';
     const up = upcomingSchools()[0];
     $('#mGrad').textContent = up ? `最近截止 ${daysBetween(todayStr(), up.deadline)} 天` : '';
-    { const js = jobStats(); $('#mJobs').textContent = js.total ? `已投 ${js.sent} · 新可投 ${js.newFit}${followUps().length ? ` · ${followUps().length} 项待跟进` : ''}` : ''; }
+    { const js = jobStats(); $('#mJobs').textContent = js.total ? `已投 ${js.sent} · 新可投 ${js.newFit}` : ''; }
     $('#mFood').textContent = `今天 ${Math.round(f.p)} g 蛋白`;
     $('#mLife').textContent = money(monthTotal(mo));
   }
@@ -2344,7 +2344,7 @@ Google 日历本周已有：${Object.entries(S.cal).flatMap(([d, l]) => l.filter
     $('#kanban').innerHTML = cols.map(([k, l]) => { const items = by(k); return `<div class="kcol"><h3>${l}<span>${items.length}</span></h3>${items.length ? items.map(j => {
       const n = j.status === 'applied' ? jDays(j) : null;
       return `<div class="kmini"><div class="ttl">${esc(j.company)}</div><div class="sub">${esc(j.title)}</div>
-        ${n !== null ? `<div class="since">${n === 0 ? '今天投递' : `投递 ${n} 天`}${n >= 10 ? '，<b>该跟进了</b>' : ''}</div>` : ''}
+        ${n !== null ? `<div class="since">${n === 0 ? '今天投递' : `投递 ${n} 天`}</div>` : ''}
         <div class="row2"><select class="field" data-jst="${esc(j.id)}" aria-label="修改状态">${J_STATUS.map(([v, lb]) => `<option value="${v}" ${j.status === v ? 'selected' : ''}>${lb}</option>`).join('')}</select><a href="${esc(j.apply_url)}" target="_blank" rel="noopener">申请页 ↗</a>${['want', 'new'].includes(j.status) ? `<button class="link" data-jgone="${esc(j.id)}">已下线</button>` : ''}</div>
         <textarea class="field" data-jnote="${esc(j.id)}" placeholder="联系人、面试时间、内推人…">${esc(j.notes || '')}</textarea></div>`;
     }).join('') : `<div class="khint">${k === 'want' ? '在"新岗位"里点"想投"，会出现在这里。' : '暂无'}</div>`}</div>`; }).join('');
@@ -2359,7 +2359,7 @@ Google 日历本周已有：${Object.entries(S.cal).flatMap(([d, l]) => l.filter
     const oldest = waiting.length ? Math.max(...waiting.map(jDays).filter(x => x != null)) : null;
     return `<div class="card"><div class="card-h"><h2>每周投递</h2><span class="hint">最近 6 周</span></div>
       <div class="wbars">${n.map((v, i) => `<div class="wb ${i === 5 ? 'cur' : ''}"><b>${v || ''}</b><i style="height:${Math.max(3, v / max * 100)}%"></i><span>${i === 5 ? '本周' : weeks[i].slice(5).replace('-', '/')}</span></div>`).join('')}</div>
-      <p class="saved">${waiting.length ? `${waiting.length} 个在等回复${oldest != null && oldest >= 0 ? `，最久的已 ${oldest} 天` : ''}。投递 10 天没动静会在这里标出「该跟进了」。` : '还没有在等回复的投递。'}</p></div>`;
+      <p class="saved">${waiting.length ? `${waiting.length} 个在等回复${oldest != null && oldest >= 0 ? `，最久的已 ${oldest} 天` : ''}。` : '还没有在等回复的投递。'}</p></div>`;
   }
   function renderJStats() {
     const c = s => S.jobs.filter(j => j.status === s).length;
