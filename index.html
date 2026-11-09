@@ -1644,7 +1644,7 @@ end</pre>
 
   function txnHtml(e) {
     return `<div class="txn"><div class="txn-h"><b>${esc(e.merchant || '交易')}</b><span class="num">${money(+e.amount || 0)} · ${e.date.slice(5)}</span></div>
-      <div class="chipset">${EXP_CATS.filter(c => c.k !== 'housing').map(c => `<button class="chip" data-txncat="${c.k}" data-txn="${esc(e.id)}">${c.n}</button>`).join('')}<button class="chip" data-txnignore="${esc(e.id)}" title="不计入花费，比如转账或还款">忽略</button></div></div>`;
+      <div class="chipset"><button class="chip" data-txnfixed="${esc(e.id)}" title="房租、车险这类每月固定的开销">固定支出</button>${EXP_CATS.map(c => `<button class="chip" data-txncat="${c.k}" data-txn="${esc(e.id)}">${c.n}</button>`).join('')}<button class="chip" data-txnignore="${esc(e.id)}" title="不计入花费，比如转账或还款">忽略</button></div></div>`;
   }
   function attentionItems() {
     const t = todayStr(); const out = [];
@@ -1656,7 +1656,6 @@ end</pre>
         act: `${e.link ? `<a class="link" href="${esc(e.link)}" target="_blank" rel="noopener">打开链接</a>` : ''}<button class="att-x" data-delevt="${esc(e.id)}" title="删除这个活动" aria-label="删除活动">✕</button>` });
     });
     if (pend.length) out.push({ h: `${pend.length} 笔交易待分类`, body: pend.slice(0, 3).map(txnHtml).join('') + (pend.length > 3 ? `<div class="saved">还有 ${pend.length - 3} 笔，分完这些会继续显示。</div>` : '') });
-    followUps().forEach(x => out.push({ red: true, h: `跟进 ${esc(x.j.company)} · ${esc(x.j.role)}`, sub: x.why, go: 'jobs' }));
     const js = jobStats();
     if (js.newToday) out.push({ h: `今天新增 ${js.newToday} 个岗位`, sub: '去看看', go: 'jobs' });
     upcomingSchools().filter(s => daysBetween(t, s.deadline) <= 30).forEach(s => { const n = daysBetween(t, s.deadline); out.push({ red: n <= 14, h: `${esc(s.name)} ${n < 0 ? '已过截止' : `截止还剩 ${n} 天`}`, sub: `材料 ${MATS.filter(m => (s.materials || {})[m.k]).length}/${MATS.length}`, go: 'grad' }); });
@@ -2352,7 +2351,7 @@ Google 日历本周已有：${Object.entries(S.cal).flatMap(([d, l]) => l.filter
     const oldest = waiting.length ? Math.max(...waiting.map(jDays).filter(x => x != null)) : null;
     return `<div class="card"><div class="card-h"><h2>每周投递</h2><span class="hint">最近 6 周</span></div>
       <div class="wbars">${n.map((v, i) => `<div class="wb ${i === 5 ? 'cur' : ''}"><b>${v || ''}</b><i style="height:${Math.max(3, v / max * 100)}%"></i><span>${i === 5 ? '本周' : weeks[i].slice(5).replace('-', '/')}</span></div>`).join('')}</div>
-      <p class="saved">${waiting.length ? `${waiting.length} 个在等回复${oldest != null && oldest >= 0 ? `，最久的已 ${oldest} 天` : ''}。投递 10 天没动静就会出现在首页「跟进」里。` : '还没有在等回复的投递。'}</p></div>`;
+      <p class="saved">${waiting.length ? `${waiting.length} 个在等回复${oldest != null && oldest >= 0 ? `，最久的已 ${oldest} 天` : ''}。投递 10 天没动静会在这里标出「该跟进了」。` : '还没有在等回复的投递。'}</p></div>`;
   }
   function renderJStats() {
     const c = s => S.jobs.filter(j => j.status === s).length;
@@ -2923,6 +2922,13 @@ ${pend.map(e => `${e.id} | ${e.merchant || ''} | ${e.note || ''} | ${e.amount}`)
     if (ds.delinc) { const x = S.income.find(y => y.id === ds.delinc); if (!x) return; const { id, ...body } = x; if (await write(db => db.doc('income/' + id).delete())) toast('已删除这笔入账', () => write(db => db.doc('income/' + id).set(body))); return; }
     if (ds.gdel) { const g = S.savgoals.find(x => x.id === ds.gdel); if (!g) return; const { id, ...body } = g; if (await write(db => db.doc('savgoals/' + id).delete())) toast('已删除', () => write(db => db.doc('savgoals/' + id).set(body))); return; }
     if (ds.txncat) { finSetCat(ds.txn, ds.txncat); return; }
+    if (ds.txnfixed) {
+      // Fixed cost: take the category of the recurring item it matches (rent → 住房, insurance → 交通), else 住房.
+      const e = allSpend().find(x => x.id === ds.txnfixed); if (!e) return;
+      const r = S.recurring.find(r => Math.abs((+e.amount || 0) - (+r.amount || 0)) <= (+r.amount || 0) * .1); const cat = r && EXP_CATS.some(c => c.k === r.cat) ? r.cat : 'housing';
+      const prev = { cat: e.cat || '', fixed: e.fixed || false, catBy: e.catBy || null }; Object.assign(e, { cat, fixed: true, catBy: 'me' }); render();
+      if (await write(db => db.doc('expenses/' + e.id).update({ cat, fixed: true, catBy: 'me' }))) toast(`已记为固定支出（${expName(cat)}${r ? ` · ${r.name}` : ''}）`, () => write(db => db.doc('expenses/' + e.id).update(prev)));
+      return; }
     if (ds.txnignore) { const t = S.bofa.find(x => x.id === ds.txnignore); if (t) { t.ignored = true; t.amount = 0; } render(); return write(db => db.doc('expenses/' + ds.txnignore).update({ ignored: true, amount: 0 })); }
     if (ds.delfood != null) {
       const date = S.sel, i = +ds.delfood, item = getDay(date).food[i]; saveDay(date, d => { d.food.splice(i, 1); });
